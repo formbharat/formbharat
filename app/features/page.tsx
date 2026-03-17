@@ -179,52 +179,55 @@ export default function FeaturesPage() {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">F</span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">FormBharat</span>
+              <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">FormBharat</span>
             </Link>
-            <div className="flex gap-4 items-center">
-              <Link href="/features" className="text-gray-900 font-medium">Features</Link>
-              <Link href="/templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
-              <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
-              <Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+            <div className="hidden md:flex gap-4 items-center">
+              <Link href="/features" className="text-gray-900 font-medium text-sm">Features</Link>
+              <Link href="/templates" className="text-gray-600 hover:text-gray-900 text-sm">Templates</Link>
+              <Link href="/about" className="text-gray-600 hover:text-gray-900 text-sm">About</Link>
+              <Link href="/contact" className="text-gray-600 hover:text-gray-900 text-sm">Contact</Link>
               <Link href="/auth/login">
-                <Button variant="outline">Login</Button>
+                <Button variant="outline" size="sm">Login</Button>
               </Link>
               <Link href="/builder">
-                <Button className="bg-gradient-to-r from-orange-500 to-pink-500">Start Free</Button>
+                <Button size="sm" className="bg-gradient-to-r from-orange-500 to-pink-500">Start Free</Button>
               </Link>
             </div>
+            <Link href="/builder" className="md:hidden">
+              <Button size="sm" className="bg-gradient-to-r from-orange-500 to-pink-500">Start Free</Button>
+            </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="py-20 px-4 bg-gradient-to-b from-orange-50 to-white">
+      <section className="py-12 md:py-20 px-4 bg-gradient-to-b from-orange-50 to-white">
         <div className="container mx-auto max-w-6xl text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Everything you need to create <br />
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
+            Everything you need to create <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               powerful forms
             </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-gray-600 mb-6 md:mb-8 max-w-3xl mx-auto px-4">
             FormBharat combines the best features of global form builders with India-specific needs. 
             Build, share via WhatsApp, and analyze — all for free.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/builder">
-              <Button size="lg" className="bg-gradient-to-r from-orange-500 to-pink-500">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
+            <Link href="/builder" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-pink-500">
                 Start Building Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/templates">
-              <Button size="lg" variant="outline">
+            <Link href="/templates" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
                 Browse Templates
               </Button>
             </Link>
@@ -233,19 +236,19 @@ export default function FeaturesPage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4">
+      <section className="py-12 md:py-20 px-4">
         <div className="container mx-auto max-w-7xl">
           {features.map((category, idx) => {
             const CategoryIcon = category.icon
             return (
-              <div key={idx} className="mb-16">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className={`w-12 h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center`}>
-                    <CategoryIcon className={`h-6 w-6 text-${category.color}-600`} />
+              <div key={idx} className="mb-12 md:mb-16">
+                <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
+                  <div className={`w-10 md:w-12 h-10 md:h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center flex-shrink-0`}>
+                    <CategoryIcon className={`h-5 md:h-6 w-5 md:w-6 text-${category.color}-600`} />
                   </div>
-                  <h2 className="text-3xl font-bold">{category.category}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold">{category.category}</h2>
                 </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {category.items.map((feature, featureIdx) => {
                     const FeatureIcon = feature.icon
                     return (
