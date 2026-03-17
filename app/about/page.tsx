@@ -1,0 +1,202 @@
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Target, Heart, Users, Zap } from 'lucide-react'
+
+export default function AboutPage() {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">F</span>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+              FormBharat
+            </span>
+          </Link>
+          <div className="flex gap-4 items-center">
+            <Link href="/#features" className="text-gray-600 hover:text-gray-900">Features</Link>
+            <Link href="/templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
+            <Link href="/about" className="text-gray-900 font-medium">About</Link>
+            <Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+            <Link href="/auth/login">
+              <Button variant="outline">Login</Button>
+            </Link>
+            <Link href="/builder">
+              <Button className="bg-gradient-to-r from-orange-500 to-pink-500">Start Free</Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="pt-20 pb-16 px-4 bg-gradient-to-b from-orange-50 to-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            Built for <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">Indian Businesses</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            FormBharat is on a mission to make form building simple, accessible, and powerful for every Indian business.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div>
+              <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
+              <p className="text-lg text-gray-600 mb-4">
+                We believe every business deserves access to powerful tools without breaking the bank. 
+                That's why we're building FormBharat - a form builder that's free, powerful, and made specifically for India.
+              </p>
+              <p className="text-lg text-gray-600">
+                From small shops to growing startups, we're helping Indian businesses collect feedback, 
+                manage registrations, and grow their operations - all for free.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-orange-100 to-pink-100 rounded-2xl p-12 flex items-center justify-center">
+              <Heart className="h-32 w-32 text-orange-500" />
+            </div>
+          </div>
+
+          {/* Values */}
+          <div className="mb-20">
+            <h2 className="text-4xl font-bold text-center mb-12">Our Values</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <Card>
+                <CardHeader>
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <Target className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <CardTitle>India First</CardTitle>
+                  <CardDescription>
+                    Built with Indian businesses in mind - from WhatsApp integration to Razorpay support.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+                    <Heart className="h-6 w-6 text-pink-600" />
+                  </div>
+                  <CardTitle>Always Free</CardTitle>
+                  <CardDescription>
+                    No hidden costs. Early access users get premium features free forever.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <Users className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <CardTitle>User Focused</CardTitle>
+                  <CardDescription>
+                    Every feature we build is driven by feedback from real Indian businesses.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <Zap className="h-6 w-6 text-green-600" />
+                  </div>
+                  <CardTitle>Fast & Simple</CardTitle>
+                  <CardDescription>
+                    Create forms in minutes, not hours. No training required.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+
+          {/* Story */}
+          <div className="bg-gray-50 rounded-2xl p-12">
+            <h2 className="text-3xl font-bold mb-6">Why We Built FormBharat</h2>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 mb-4">
+                As developers and entrepreneurs in India, we've seen firsthand how expensive and complicated 
+                form building tools can be. International tools often don't cater to Indian needs - no UPI 
+                payments, no WhatsApp integration, no regional language support.
+              </p>
+              <p className="text-gray-600 mb-4">
+                We built FormBharat to change that. A tool that understands the Indian market, supports 
+                the platforms Indians actually use (WhatsApp, UPI), and is accessible to businesses of all sizes.
+              </p>
+              <p className="text-gray-600">
+                Today, we're in early access and completely free. Our goal is to empower 10,000+ Indian 
+                businesses in our first year, and we're just getting started.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl p-12 text-center text-white">
+            <h2 className="text-4xl font-bold mb-4">Join Us on This Journey</h2>
+            <p className="text-xl mb-8 opacity-90">
+              Be part of India's form building revolution
+            </p>
+            <Link href="/builder">
+              <Button size="lg" variant="secondary" className="text-lg px-8">
+                Create Your First Form
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">F</span>
+                </div>
+                <span className="text-white font-bold text-lg">FormBharat</span>
+              </div>
+              <p className="text-sm">The form builder made for Indian businesses.</p>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
+                <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/about" className="hover:text-white">About</Link></li>
+                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
