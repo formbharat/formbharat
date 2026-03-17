@@ -17,7 +17,10 @@ export async function sendEmailNotification(
   }
 
   try {
-    // In production, integrate with email service (SendGrid, Resend, etc.)
+    const emailHtml = generateEmailTemplate(formTitle, responseData)
+
+    await resend.emails.send({
+      from: 'FormBharat <notifications@formbharat.com>',
     // For now, we'll structure the data for future integration
     
     const emailPayload = {

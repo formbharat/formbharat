@@ -18,7 +18,7 @@ export default function Home() {
             </span>
           </div>
           <nav className="hidden md:flex gap-8 items-center">
-            <Link href="#features" className="text-gray-600 hover:text-gray-900 transition">Features</Link>
+            <Link href="/features" className="text-gray-600 hover:text-gray-900 transition">Features</Link>
             <Link href="/templates" className="text-gray-600 hover:text-gray-900 transition">Templates</Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900 transition">About</Link>
             <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition">Contact</Link>

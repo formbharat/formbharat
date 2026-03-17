@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Mail, MessageSquare, HelpCircle } from 'lucide-react'
+import LiveChatButton from '@/components/LiveChatButton'
 
 export default function ContactPage() {
   return (
@@ -20,7 +21,7 @@ export default function ContactPage() {
             </span>
           </Link>
           <div className="flex gap-4 items-center">
-            <Link href="/#features" className="text-gray-600 hover:text-gray-900">Features</Link>
+            <Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link>
             <Link href="/templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
             <Link href="/contact" className="text-gray-900 font-medium">Contact</Link>
@@ -78,9 +79,7 @@ export default function ContactPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Button variant="outline" className="w-full">
-                  Start Chat
-                </Button>
+                <LiveChatButton variant="outline" className="w-full" />
               </CardContent>
             </Card>
 

@@ -5,20 +5,20 @@ import { verifyAuth } from '@/lib/auth'
 // GET - Get webhook settings for a form
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const user = await verifyAuth(request)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const form = await prisma.form.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: { 
         userId: true,
-        webhookUrl: true,
-        webhookEnabled: true 
+        title: true
       }
     })
 
@@ -27,8 +27,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      webhookUrl: form.webhookUrl,
-      webhookEnabled: form.webhookEnabled
+      title: form.title
     })
   } catch (error) {
     console.error('Error fetching webhook settings:', error)
@@ -39,18 +38,19 @@ export async function GET(
 // PUT - Update webhook settings for a form
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const user = await verifyAuth(request)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { webhookUrl, webhookEnabled } = await request.json()
+    const { title } = await request.json()
 
     const form = await prisma.form.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: { userId: true }
     })
 
@@ -59,38 +59,17 @@ export async function PUT(
     }
 
     const updatedForm = await prisma.form.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
-        webhookUrl: webhookUrl || null,
-        webhookEnabled: webhookEnabled || false
+        title
       }
     })
 
     return NextResponse.json({
-      webhookUrl: updatedForm.webhookUrl,
-      webhookEnabled: updatedForm.webhookEnabled
+      title: updatedForm.title
     })
   } catch (error) {
     console.error('Error updating webhook settings:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
-// Helper function to send webhook
-export async function sendWebhook(webhookUrl: string, payload: any) {
-  try {
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'FormBharat-Webhook/1.0'
-      },
-      body: JSON.stringify(payload)
-    })
-
-    return response.ok
-  } catch (error) {
-    console.error('Error sending webhook:', error)
-    return false
   }
 }

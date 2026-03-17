@@ -5,25 +5,20 @@ import { verifyAuth } from '@/lib/auth'
 // PUT - Update form settings
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const user = await verifyAuth(request)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const {
-      emailNotificationsEnabled,
-      emailRecipients,
-      webhookEnabled,
-      webhookUrl,
-      multiStepEnabled
-    } = await request.json()
+    const { title, description } = await request.json()
 
     // Verify form ownership
     const form = await prisma.form.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: { userId: true }
     })
 
@@ -33,25 +28,16 @@ export async function PUT(
 
     // Update form settings
     const updatedForm = await prisma.form.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
-        emailNotificationsEnabled: emailNotificationsEnabled || false,
-        emailRecipients: emailRecipients || [],
-        webhookEnabled: webhookEnabled || false,
-        webhookUrl: webhookUrl || null,
-        multiStepEnabled: multiStepEnabled || false
+        title,
+        description
       }
     })
 
     return NextResponse.json({
       message: 'Settings updated successfully',
-      settings: {
-        emailNotificationsEnabled: updatedForm.emailNotificationsEnabled,
-        emailRecipients: updatedForm.emailRecipients,
-        webhookEnabled: updatedForm.webhookEnabled,
-        webhookUrl: updatedForm.webhookUrl,
-        multiStepEnabled: updatedForm.multiStepEnabled
-      }
+      form: updatedForm
     })
   } catch (error) {
     console.error('Error updating form settings:', error)
@@ -62,23 +48,21 @@ export async function PUT(
 // GET - Get form settings
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const user = await verifyAuth(request)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const form = await prisma.form.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: {
         userId: true,
-        emailNotificationsEnabled: true,
-        emailRecipients: true,
-        webhookEnabled: true,
-        webhookUrl: true,
-        multiStepEnabled: true
+        title: true,
+        description: true
       }
     })
 
@@ -87,11 +71,8 @@ export async function GET(
     }
 
     return NextResponse.json({
-      emailNotificationsEnabled: form.emailNotificationsEnabled,
-      emailRecipients: form.emailRecipients,
-      webhookEnabled: form.webhookEnabled,
-      webhookUrl: form.webhookUrl,
-      multiStepEnabled: form.multiStepEnabled
+      title: form.title,
+      description: form.description
     })
   } catch (error) {
     console.error('Error fetching form settings:', error)

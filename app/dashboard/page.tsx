@@ -316,7 +316,7 @@ export default function DashboardPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => duplicateForm(form.id)}
+                          onClick={() => {}}
                           className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                           title="Duplicate form"
                         >

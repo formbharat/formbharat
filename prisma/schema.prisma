@@ -27,6 +27,21 @@ model Form {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   responses   Response[]
+  webhookLogs WebhookLog[]
+
+  // Multi-step forms
+  multiStepEnabled Boolean @default(false)
+  steps           Json?   // Array of step configurations with page titles
+
+  // Webhooks
+  webhookUrl     String?
+  webhookEnabled Boolean @default(false)
+  webhookSecret  String?
+
+  // Email notifications
+  emailNotificationsEnabled Boolean   @default(false)
+  emailRecipients           String[]  @default([])
+  emailTemplate             String?
 
   @@index([userId])
 }
@@ -38,5 +53,27 @@ model Response {
   data      Json
   createdAt DateTime @default(now())
 
+  // Enhanced tracking
+  startedAt      DateTime?
+  completedAt    DateTime  @default(now())
+  completionTime Int?      // seconds
+  abandoned      Boolean   @default(false)
+  currentPage    Int?      // for multi-step forms
+
   @@index([formId])
+}
+
+model WebhookLog {
+  id        String   @id @default(uuid())
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  status    String   // success, failed, pending
+  payload   Json
+  response  Json?
+  attempts  Int      @default(0)
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([formId])
+  @@index([status])
 }

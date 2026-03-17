@@ -19,7 +19,14 @@ export default function TemplatesPage() {
 
   const handleUseTemplate = (templateId: string) => {
     const template = formTemplates.find(t => t.id === templateId)
+    console.log('Selected template ID:', templateId)
+    console.log('Found template:', template)
     if (template) {
+      console.log('Saving template to localStorage:', {
+        id: template.id,
+        title: template.title,
+        fieldsCount: template.fields.length
+      })
       localStorage.setItem('selected-template', JSON.stringify(template))
       router.push('/builder')
     }
@@ -47,7 +54,7 @@ export default function TemplatesPage() {
               <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">FormBharat</span>
             </Link>
             <div className="flex gap-4 items-center">
-              <Link href="/#features" className="text-gray-600 hover:text-gray-900">Features</Link>
+              <Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link>
               <Link href="/templates" className="text-gray-900 font-medium">Templates</Link>
               <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
               <Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>

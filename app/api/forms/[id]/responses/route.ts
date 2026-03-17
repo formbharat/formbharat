@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const responses = await prisma.response.findMany({
-      where: { formId: params.id },
+      where: { formId: id },
       orderBy: { createdAt: 'desc' },
     })
 
@@ -23,14 +24,15 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const data = await request.json()
 
     const response = await prisma.response.create({
       data: {
-        formId: params.id,
+        formId: id,
         data,
       },
     })

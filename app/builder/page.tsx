@@ -22,15 +22,27 @@ export default function BuilderPage() {
 
   useEffect(() => {
     const savedTemplate = localStorage.getItem('selected-template')
+    console.log('Builder: Checking localStorage for template')
+    console.log('Saved template data:', savedTemplate)
+    
     if (savedTemplate) {
       try {
         const template = JSON.parse(savedTemplate)
+        console.log('Builder: Parsed template:', {
+          id: template.id,
+          title: template.title,
+          fieldsCount: template.fields?.length
+        })
+        
         setTemplateData({
           title: template.title,
           description: template.description,
           fields: template.fields
         })
         localStorage.removeItem('selected-template')
+        
+        console.log('Builder: Template data set to state')
+        
         toast({
           title: 'Template Loaded',
           description: `"${template.title}" template has been loaded. Customize and save it!`,
@@ -38,8 +50,10 @@ export default function BuilderPage() {
       } catch (error) {
         console.error('Error loading template:', error)
       }
+    } else {
+      console.log('Builder: No template found in localStorage')
     }
-  }, [])
+  }, [toast])
 
   const handleSave = (data: { title: string; description: string; fields: FormField[] }) => {
     if (!data.title.trim()) {

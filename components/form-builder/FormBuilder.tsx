@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DndContext, DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { nanoid } from 'nanoid'
@@ -32,6 +32,13 @@ export function FormBuilder({
   const [title, setTitle] = useState(initialTitle)
   const [description, setDescription] = useState(initialDescription)
   const [fields, setFields] = useState<FormField[]>(initialFields)
+
+  // Update state when props change (template loading)
+  useEffect(() => {
+    if (initialTitle) setTitle(initialTitle)
+    if (initialDescription) setDescription(initialDescription)
+    if (initialFields && initialFields.length > 0) setFields(initialFields)
+  }, [initialTitle, initialDescription, initialFields])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

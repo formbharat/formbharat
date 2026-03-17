@@ -18,7 +18,7 @@ export default function AboutPage() {
             </span>
           </Link>
           <div className="flex gap-4 items-center">
-            <Link href="/#features" className="text-gray-600 hover:text-gray-900">Features</Link>
+            <Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link>
             <Link href="/templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
             <Link href="/about" className="text-gray-900 font-medium">About</Link>
             <Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
