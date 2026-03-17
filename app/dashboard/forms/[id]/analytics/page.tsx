@@ -67,19 +67,20 @@ export default function AnalyticsPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex justify-between items-center">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
+                <ArrowLeft className="mr-1 md:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Back to Dashboard</span>
+                <span className="sm:hidden">Back</span>
               </Button>
             </Link>
             <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">F</span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="hidden md:inline text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
                 FormBharat
               </span>
             </Link>
@@ -87,15 +88,15 @@ export default function AnalyticsPage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 md:py-8">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{form.title} - Analytics</h1>
-          <p className="text-gray-600">Detailed insights and statistics</p>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 line-clamp-1">{form.title} - Analytics</h1>
+          <p className="text-sm md:text-base text-gray-600">Detailed insights and statistics</p>
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">Total Responses</CardTitle>
@@ -173,8 +174,8 @@ export default function AnalyticsPage() {
           
           {analytics.fieldAnalytics.map((fieldData) => (
             <Card key={fieldData.fieldId}>
-              <CardHeader>
-                <CardTitle className="text-lg">{fieldData.fieldLabel}</CardTitle>
+              <CardHeader className="p-4 md:p-6">
+                <CardTitle className="text-base md:text-lg">{fieldData.fieldLabel}</CardTitle>
                 <CardDescription>
                   {fieldData.fieldType} • {fieldData.responseCount} responses • {fieldData.completionRate.toFixed(1)}% completion rate
                 </CardDescription>

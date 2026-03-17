@@ -114,12 +114,13 @@ export default function ResponsesPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex justify-between items-center">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
+                <ArrowLeft className="mr-1 md:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Back to Dashboard</span>
+                <span className="sm:hidden">Back</span>
               </Button>
             </Link>
             <Link href="/" className="flex items-center gap-2">
@@ -134,20 +135,20 @@ export default function ResponsesPage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 md:py-8">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{form.title}</h1>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 line-clamp-1">{form.title}</h1>
           {form.description && (
-            <p className="text-gray-600 mb-4">{form.description}</p>
+            <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">{form.description}</p>
           )}
-          <div className="flex items-center justify-between">
-            <p className="text-gray-500">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <p className="text-sm md:text-base text-gray-500">
               Total: {responses.length} {responses.length === 1 ? 'response' : 'responses'}
             </p>
             {responses.length > 0 && (
-              <Button onClick={exportToCSV} variant="outline">
-                <Download className="mr-2 h-4 w-4" />
+              <Button onClick={exportToCSV} variant="outline" size="sm" className="text-xs md:text-sm">
+                <Download className="mr-1 md:mr-2 h-3 md:h-4 w-3 md:w-4" />
                 Export to CSV
               </Button>
             )}
@@ -156,24 +157,24 @@ export default function ResponsesPage() {
 
         {/* Stats Cards */}
         {responses.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Total Responses</CardTitle>
-                <BarChart3 className="h-5 w-5 text-orange-500" />
+              <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Total Responses</CardTitle>
+                <BarChart3 className="h-4 md:h-5 w-4 md:w-5 text-orange-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{responses.length}</div>
+              <CardContent className="p-4 md:p-6 pt-0">
+                <div className="text-2xl md:text-3xl font-bold">{responses.length}</div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Latest Response</CardTitle>
-                <Calendar className="h-5 w-5 text-pink-500" />
+              <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Latest Response</CardTitle>
+                <Calendar className="h-4 md:h-5 w-4 md:w-5 text-pink-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold">
+              <CardContent className="p-4 md:p-6 pt-0">
+                <div className="text-base md:text-lg font-semibold">
                   {new Date(responses[0]?.createdAt).toLocaleDateString()}
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
@@ -183,12 +184,12 @@ export default function ResponsesPage() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Form Fields</CardTitle>
-                <BarChart3 className="h-5 w-5 text-green-500" />
+              <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Form Fields</CardTitle>
+                <BarChart3 className="h-4 md:h-5 w-4 md:w-5 text-green-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{form.fields?.length || 0}</div>
+              <CardContent className="p-4 md:p-6 pt-0">
+                <div className="text-2xl md:text-3xl font-bold">{form.fields?.length || 0}</div>
               </CardContent>
             </Card>
           </div>

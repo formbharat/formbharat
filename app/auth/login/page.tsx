@@ -53,25 +53,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-50 to-white px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4 hover:opacity-80 transition">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">F</span>
+        <div className="text-center mb-6 md:mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 mb-3 md:mb-4 hover:opacity-80 transition">
+            <div className="w-8 md:w-10 h-8 md:h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg md:text-xl">F</span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               FormBharat
             </span>
           </Link>
         </div>
         <Card className="w-full shadow-xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Login to access your forms and responses</CardDescription>
+          <CardHeader className="text-center p-4 md:p-6">
+            <CardTitle className="text-xl md:text-2xl">Welcome Back</CardTitle>
+            <CardDescription className="text-sm md:text-base">Login to access your forms and responses</CardDescription>
           </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-4 md:p-6 pt-0">
+          <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
               <Input

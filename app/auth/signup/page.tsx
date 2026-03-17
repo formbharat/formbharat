@@ -78,51 +78,51 @@ export default function SignupPage() {
           </Link>
         </div>
         <Card className="w-full shadow-xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Create Account</CardTitle>
-            <CardDescription>Start building beautiful forms for free</CardDescription>
+          <CardHeader className="text-center p-4 md:p-6">
+            <CardTitle className="text-xl md:text-2xl">Create Account</CardTitle>
+            <CardDescription className="text-sm md:text-base">Start building beautiful forms today</CardDescription>
           </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
-                required
-                minLength={6}
-              />
-            </div>
-            <Button type="submit" disabled={loading} className="w-full h-11 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
-              {loading ? 'Creating account...' : 'Create Account'}
-            </Button>
-            <div className="text-center text-sm">
-              Already have an account?{' '}
-              <Link href="/auth/login" className="text-orange-600 hover:underline font-medium">
-                Login
-              </Link>
-            </div>
-            <p className="text-xs text-center text-gray-500 mt-4">
-              By signing up, you agree to our Terms and Privacy Policy
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+          <CardContent className="p-4 md:p-6 pt-0">
+            <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <Button type="submit" disabled={loading} className="w-full h-11 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
+                {loading ? 'Creating account...' : 'Create Account'}
+              </Button>
+              <div className="text-center text-sm">
+                Already have an account?{' '}
+                <Link href="/auth/login" className="text-orange-600 hover:underline font-medium">
+                  Login
+                </Link>
+              </div>
+              <p className="text-xs text-center text-gray-500 mt-4">
+                By signing up, you agree to our Terms and Privacy Policy
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-  </div>
   )
 }
