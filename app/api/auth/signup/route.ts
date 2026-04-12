@@ -24,8 +24,10 @@ export async function POST(request: NextRequest) {
 
     if (authData.user) {
       try {
-        await prisma.user.create({
-          data: {
+        await prisma.user.upsert({
+          where: { email: authData.user.email! },
+          update: {},
+          create: {
             id: authData.user.id,
             email: authData.user.email!,
             name: email.split('@')[0],

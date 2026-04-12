@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -17,48 +18,40 @@ model User {
 }
 
 model Form {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fields      Json
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  responses   Response[]
-  webhookLogs WebhookLog[]
-
-  // Multi-step forms
-  multiStepEnabled Boolean @default(false)
-  steps           Json?   // Array of step configurations with page titles
-
-  // Webhooks
-  webhookUrl     String?
-  webhookEnabled Boolean @default(false)
-  webhookSecret  String?
-
-  // Email notifications
-  emailNotificationsEnabled Boolean   @default(false)
-  emailRecipients           String[]  @default([])
+  id                        String       @id @default(cuid())
+  title                     String
+  description               String?
+  userId                    String
+  fields                    Json
+  published                 Boolean      @default(false)
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
+  multiStepEnabled          Boolean      @default(false)
+  steps                     Json?
+  webhookUrl                String?
+  webhookEnabled            Boolean      @default(false)
+  webhookSecret             String?
+  emailNotificationsEnabled Boolean      @default(false)
+  emailRecipients           String[]     @default([])
   emailTemplate             String?
+  user                      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  responses                 Response[]
+  webhookLogs               WebhookLog[]
 
   @@index([userId])
 }
 
 model Response {
-  id        String   @id @default(uuid())
-  formId    String
-  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
-  data      Json
-  createdAt DateTime @default(now())
-
-  // Enhanced tracking
+  id             String    @id @default(uuid())
+  formId         String
+  data           Json
+  createdAt      DateTime  @default(now())
   startedAt      DateTime?
   completedAt    DateTime  @default(now())
-  completionTime Int?      // seconds
+  completionTime Int?
   abandoned      Boolean   @default(false)
-  currentPage    Int?      // for multi-step forms
+  currentPage    Int?
+  form           Form      @relation(fields: [formId], references: [id], onDelete: Cascade)
 
   @@index([formId])
 }
@@ -66,13 +59,13 @@ model Response {
 model WebhookLog {
   id        String   @id @default(uuid())
   formId    String
-  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
-  status    String   // success, failed, pending
+  status    String
   payload   Json
   response  Json?
   attempts  Int      @default(0)
   error     String?
   createdAt DateTime @default(now())
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
 
   @@index([formId])
   @@index([status])

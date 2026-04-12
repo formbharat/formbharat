@@ -25,6 +25,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Ensure user exists in our database
+    await prisma.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        email: user.email!,
+        name: user.email?.split('@')[0] || 'User',
+      },
+    })
+
     const form = await prisma.form.create({
       data: {
         title,
@@ -58,6 +69,17 @@ export async function GET(request: NextRequest) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Ensure user exists in our database
+    await prisma.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        email: user.email!,
+        name: user.email?.split('@')[0] || 'User',
+      },
+    })
 
     const forms = await prisma.form.findMany({
       where: { userId: user.id },

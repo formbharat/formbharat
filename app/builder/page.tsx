@@ -55,7 +55,40 @@ export default function BuilderPage() {
     }
   }, [toast])
 
-  const handleSave = (data: { title: string; description: string; fields: FormField[] }) => {
+  const saveForm = async (data: { title: string; description: string; fields: FormField[] }, token: string) => {
+    try {
+      const saveResponse = await fetch('/api/forms', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!saveResponse.ok) {
+        const errorData = await saveResponse.json()
+        throw new Error(errorData.error || 'Failed to save form')
+      }
+
+      const savedForm = await saveResponse.json()
+      
+      toast({
+        title: 'Success',
+        description: 'Form saved successfully!',
+      })
+
+      router.push('/dashboard')
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save form',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleSave = async (data: { title: string; description: string; fields: FormField[] }) => {
     if (!data.title.trim()) {
       toast({
         title: 'Error',
@@ -74,8 +107,16 @@ export default function BuilderPage() {
       return
     }
 
-    setFormData(data)
-    setShowAuthDialog(true)
+    // Check if user is already logged in
+    const token = localStorage.getItem('token')
+    if (token) {
+      // User is logged in, save form directly
+      await saveForm(data, token)
+    } else {
+      // User not logged in, show auth dialog
+      setFormData(data)
+      setShowAuthDialog(true)
+    }
   }
 
   const handleAuth = async () => {
@@ -102,25 +143,18 @@ export default function BuilderPage() {
         throw new Error(result.error || 'Authentication failed')
       }
 
+      // Store the authentication token
+      if (result.session?.access_token) {
+        localStorage.setItem('token', result.session.access_token)
+      }
+
+      // Save the form if we have form data
       if (formData) {
-        const saveResponse = await fetch('/api/forms', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        })
-
-        if (!saveResponse.ok) {
-          throw new Error('Failed to save form')
+        const token = localStorage.getItem('token')
+        if (token) {
+          await saveForm(formData, token)
+          setShowAuthDialog(false)
         }
-
-        const savedForm = await saveResponse.json()
-        
-        toast({
-          title: 'Success',
-          description: 'Form saved successfully!',
-        })
-
-        router.push(`/dashboard`)
       }
     } catch (error: any) {
       toast({
