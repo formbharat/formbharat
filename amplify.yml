@@ -4,6 +4,8 @@ frontend:
     preBuild:
       commands:
         - npm ci
+        # Copy environment variables to .env.production
+        - node scripts/setup-env.js
         # Generate Prisma client with environment variables
         - npx prisma generate
     build:
