@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
@@ -192,9 +194,11 @@ export default function HelpPage() {
                   className={`cursor-pointer hover:shadow-lg transition ${isSelected ? 'ring-2 ring-orange-500' : ''}`}
                   onClick={() => setSelectedCategory(isSelected ? null : category.name)}
                 >
-                  <CardContent className="p-6">
-                    <div className={`w-12 h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center mb-4`}>
-                      <Icon className={`h-6 w-6 text-${category.color}-600`} />
+                  <CardContent className="p-6 text-center">
+                    <div className="flex justify-center mb-4">
+                      <div className={`w-16 h-16 bg-${category.color}-100 rounded-2xl flex items-center justify-center`}>
+                        <Icon className={`h-8 w-8 text-${category.color}-600`} />
+                      </div>
                     </div>
                     <h3 className="font-semibold mb-2">{category.name}</h3>
                     <p className="text-sm text-gray-500">
@@ -276,48 +280,7 @@ export default function HelpPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">F</span>
-                </div>
-                <span className="text-white font-bold text-lg">FormBharat</span>
-              </div>
-              <p className="text-sm">The form builder made for Indian businesses.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
-                <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
-                <li><Link href="/builder" className="hover:text-white">Form Builder</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

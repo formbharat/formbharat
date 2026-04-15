@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Form Builder Features - WhatsApp Integration & Indian Templates',
@@ -394,10 +395,12 @@ export default function FeaturesPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <MessageSquare className="h-6 w-6 text-green-600" />
+            <Card className="h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                    <MessageSquare className="h-8 w-8 text-green-600" />
+                  </div>
                 </div>
                 <CardTitle>WhatsApp First</CardTitle>
                 <CardDescription>
@@ -406,10 +409,12 @@ export default function FeaturesPage() {
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <FileText className="h-6 w-6 text-blue-600" />
+            <Card className="h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                    <FileText className="h-8 w-8 text-blue-600" />
+                  </div>
                 </div>
                 <CardTitle>Indian Templates</CardTitle>
                 <CardDescription>
@@ -418,10 +423,12 @@ export default function FeaturesPage() {
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Star className="h-6 w-6 text-orange-600" />
+            <Card className="h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
+                    <Star className="h-8 w-8 text-orange-600" />
+                  </div>
                 </div>
                 <CardTitle>100% Free</CardTitle>
                 <CardDescription>
@@ -458,48 +465,7 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">F</span>
-                </div>
-                <span className="text-white font-bold text-lg">FormBharat</span>
-              </div>
-              <p className="text-sm">The form builder made for Indian businesses.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/features" className="hover:text-white">Features</Link></li>
-                <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
-                <li><Link href="/builder" className="hover:text-white">Form Builder</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

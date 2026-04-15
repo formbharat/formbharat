@@ -2,30 +2,21 @@
 
 import { Button } from '@/components/ui/button'
 import { FieldType } from '@/lib/types'
-import { 
-  TextIcon, 
-  EmailIcon, 
-  PhoneIcon, 
-  TextAreaIcon, 
-  SelectIcon, 
-  RadioIcon, 
-  CheckboxIcon, 
-  UploadIcon 
-} from '@/components/icons/CustomIcons'
+import { Type, Mail, Phone, AlignLeft, List, Circle, CheckSquare, Upload } from 'lucide-react'
 
 interface FieldTypeSelectorProps {
   onSelectType: (type: FieldType) => void
 }
 
 const fieldTypes: { type: FieldType; label: string; icon: any; description: string }[] = [
-  { type: 'text', label: 'Text', icon: TextIcon, description: 'Single line input' },
-  { type: 'email', label: 'Email', icon: EmailIcon, description: 'Email address' },
-  { type: 'phone', label: 'Phone', icon: PhoneIcon, description: 'Phone number' },
-  { type: 'textarea', label: 'Long Text', icon: TextAreaIcon, description: 'Multi-line input' },
-  { type: 'dropdown', label: 'Dropdown', icon: SelectIcon, description: 'Select from list' },
-  { type: 'radio', label: 'Radio Buttons', icon: RadioIcon, description: 'Single choice' },
-  { type: 'checkbox', label: 'Checkboxes', icon: CheckboxIcon, description: 'Multiple choice' },
-  { type: 'file', label: 'File Upload', icon: UploadIcon, description: 'Upload files/images' },
+  { type: 'text', label: 'Text', icon: Type, description: 'Single line input' },
+  { type: 'email', label: 'Email', icon: Mail, description: 'Email address' },
+  { type: 'phone', label: 'Phone', icon: Phone, description: 'Phone number' },
+  { type: 'textarea', label: 'Long Text', icon: AlignLeft, description: 'Multi-line input' },
+  { type: 'dropdown', label: 'Dropdown', icon: List, description: 'Select from list' },
+  { type: 'radio', label: 'Radio Buttons', icon: Circle, description: 'Single choice' },
+  { type: 'checkbox', label: 'Checkboxes', icon: CheckSquare, description: 'Multiple choice' },
+  { type: 'file', label: 'File Upload', icon: Upload, description: 'Upload files/images' },
 ]
 
 export function FieldTypeSelector({ onSelectType }: FieldTypeSelectorProps) {

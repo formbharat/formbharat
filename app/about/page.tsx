@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'About FormBharat - Form Builder Made for Indian Businesses',
@@ -88,48 +89,56 @@ export default function AboutPage() {
           <div className="mb-12 md:mb-20">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12">Our Values</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                    <Target className="h-6 w-6 text-orange-600" />
+              <Card className="h-full">
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
+                      <Target className="h-8 w-8 text-orange-600" />
+                    </div>
                   </div>
-                  <CardTitle>India First</CardTitle>
+                  <CardTitle className="text-xl">India First</CardTitle>
                   <CardDescription>
                     Built with Indian businesses in mind - from WhatsApp integration to Razorpay support.
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-                    <Heart className="h-6 w-6 text-pink-600" />
+              <Card className="h-full">
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center">
+                      <Heart className="h-8 w-8 text-pink-600" />
+                    </div>
                   </div>
-                  <CardTitle>Always Free</CardTitle>
+                  <CardTitle className="text-xl">Always Free</CardTitle>
                   <CardDescription>
                     No hidden costs. Early access users get premium features free forever.
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <Users className="h-6 w-6 text-blue-600" />
+              <Card className="h-full">
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                      <Users className="h-8 w-8 text-blue-600" />
+                    </div>
                   </div>
-                  <CardTitle>User Focused</CardTitle>
+                  <CardTitle className="text-xl">User Focused</CardTitle>
                   <CardDescription>
                     Every feature we build is driven by feedback from real Indian businesses.
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <Zap className="h-6 w-6 text-green-600" />
+              <Card className="h-full">
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                      <Zap className="h-8 w-8 text-green-600" />
+                    </div>
                   </div>
-                  <CardTitle>Fast & Simple</CardTitle>
+                  <CardTitle className="text-xl">Fast & Simple</CardTitle>
                   <CardDescription>
                     Create forms in minutes, not hours. No training required.
                   </CardDescription>
@@ -177,46 +186,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">F</span>
-                </div>
-                <span className="text-white font-bold text-lg">FormBharat</span>
-              </div>
-              <p className="text-sm">The form builder made for Indian businesses.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
-                <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

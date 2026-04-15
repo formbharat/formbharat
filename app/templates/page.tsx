@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Footer from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Search, FileText, Users, Calendar, ShoppingCart, Briefcase, MessageSquare, ClipboardList, Award, Phone, Mail } from 'lucide-react'
@@ -118,15 +119,17 @@ export default function TemplatesPage() {
             {filteredTemplates.map((template) => {
               const Icon = iconMap[template.icon] || FileText
               return (
-                <Card key={template.id} className="hover:shadow-lg transition group">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                      <Icon className="h-6 w-6 text-orange-600" />
+                <Card key={template.id} className="hover:shadow-lg transition group h-full flex flex-col">
+                  <CardHeader className="text-center">
+                    <div className="flex justify-center mb-4">
+                      <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition">
+                        <Icon className="h-8 w-8 text-orange-600" />
+                      </div>
                     </div>
                     <CardTitle className="text-lg">{template.title}</CardTitle>
-                    <CardDescription>{template.description}</CardDescription>
+                    <CardDescription className="min-h-[2.5rem]">{template.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="mt-auto">
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                       <span className="bg-gray-100 px-2 py-1 rounded text-xs">{template.category}</span>
                       <span>{template.fields.length} fields</span>
@@ -166,46 +169,7 @@ export default function TemplatesPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">F</span>
-                </div>
-                <span className="text-white font-bold text-lg">FormBharat</span>
-              </div>
-              <p className="text-sm">The form builder made for Indian businesses.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
-                <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

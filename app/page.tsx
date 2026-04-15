@@ -1,25 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  CheckIcon, 
-  DragDropIcon, 
-  WhatsAppIcon, 
-  AnalyticsIcon, 
-  SecurityIcon, 
-  GrowthIcon, 
-  UsersIcon, 
-  GlobeIcon, 
-  ArrowRightIcon, 
-  MenuIcon, 
-  CloseIcon 
-} from '@/components/icons/CustomIcons'
+import { CheckCircle2, Zap, Shield, TrendingUp, Users, Smartphone, BarChart3, Globe, ArrowRight, Menu, X, MessageSquare, PartyPopper, Briefcase, Target, ShoppingCart, Ticket, ClipboardList, LogOut } from 'lucide-react'
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token)
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    setIsLoggedIn(false)
+    router.push('/')
+  }
   
   return (
     <div className="min-h-screen bg-white">
@@ -42,14 +45,34 @@ export default function Home() {
               <Link href="/templates" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Templates</Link>
               <Link href="/about" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">About</Link>
               <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Contact</Link>
-              <Link href="/auth/login">
-                <Button variant="outline" size="sm">Login</Button>
-              </Link>
-              <Link href="/builder">
-                <Button size="sm" className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
-                  Start Free
-                </Button>
-              </Link>
+              
+              {isLoggedIn ? (
+                <>
+                  <Link href="/dashboard">
+                    <Button variant="outline" size="sm">My Forms</Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={handleLogout}
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button variant="outline" size="sm">Login</Button>
+                  </Link>
+                  <Link href="/builder">
+                    <Button size="sm" className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
+                      Start Free
+                    </Button>
+                  </Link>
+                </>
+              )}
             </nav>
 
             {/* Mobile Menu Button */}
@@ -58,7 +81,7 @@ export default function Home() {
               className="md:hidden p-2 text-gray-600 hover:text-gray-900"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
 
@@ -69,14 +92,36 @@ export default function Home() {
               <Link href="/templates" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Templates</Link>
               <Link href="/about" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
               <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Login</Button>
-              </Link>
-              <Link href="/builder" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
-                  Start Free
-                </Button>
-              </Link>
+              
+              {isLoggedIn ? (
+                <>
+                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">My Forms</Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-center"
+                    onClick={() => {
+                      handleLogout()
+                      setMobileMenuOpen(false)
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Login</Button>
+                  </Link>
+                  <Link href="/builder" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
+                      Start Free
+                    </Button>
+                  </Link>
+                </>
+              )}
             </nav>
           )}
         </div>
@@ -88,7 +133,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-block mb-4 md:mb-6">
               <span className="bg-orange-100 text-orange-700 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium">
-                🎉 Early Access - Free for Everyone!
+                🔓 Open Source • Free Forever
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2">
@@ -104,7 +149,7 @@ export default function Home() {
               <Link href="/builder" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 h-12 md:h-14 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
                   Create Your First Form
-                  <ArrowRightIcon className="ml-2 h-4 md:h-5 w-4 md:w-5" />
+                  <ArrowRight className="ml-2 h-4 md:h-5 w-4 md:w-5" />
                 </Button>
               </Link>
               <Link href="#features" className="w-full sm:w-auto">
@@ -115,25 +160,29 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap gap-3 md:gap-6 justify-center text-xs md:text-sm text-gray-600 px-4">
               <div className="flex items-center gap-1.5 md:gap-2">
-                <CheckIcon className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
-                <span>No credit card required</span>
+                <CheckCircle2 className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
+                <span>100% Open Source</span>
               </div>
               <div className="flex items-center gap-1.5 md:gap-2">
-                <CheckIcon className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
-                <span>Early access free</span>
+                <CheckCircle2 className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
+                <span>Free Forever</span>
               </div>
               <div className="flex items-center gap-1.5 md:gap-2">
-                <CheckIcon className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
+                <CheckCircle2 className="h-4 md:h-5 w-4 md:w-5 text-green-500 flex-shrink-0" />
                 <span>Made in India 🇮🇳</span>
               </div>
             </div>
           </div>
 
-          {/* Hero Image/Demo Placeholder */}
+          {/* Hero Image/Demo */}
           <div className="mt-8 md:mt-16 max-w-5xl mx-auto">
             <div className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-xl md:rounded-2xl p-4 md:p-8 border border-orange-100">
-              <div className="bg-white rounded-lg md:rounded-xl shadow-2xl p-4 md:p-6 aspect-video flex items-center justify-center">
-                <p className="text-gray-400 text-sm md:text-lg">Form Builder Demo Preview</p>
+              <div className="bg-white rounded-lg md:rounded-xl shadow-2xl overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=675&fit=crop&q=80" 
+                  alt="Form Builder Dashboard Preview - Analytics and Data Visualization"
+                  className="w-full h-auto aspect-video object-cover"
+                />
               </div>
             </div>
           </div>
@@ -175,10 +224,12 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <DragDropIcon className="h-6 w-6 text-orange-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
+                    <Zap className="h-8 w-8 text-orange-600" />
+                  </div>
                 </div>
                 <CardTitle>Drag & Drop Builder</CardTitle>
                 <CardDescription>
@@ -187,10 +238,12 @@ export default function Home() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-                  <WhatsAppIcon className="h-6 w-6 text-pink-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center">
+                    <Smartphone className="h-8 w-8 text-pink-600" />
+                  </div>
                 </div>
                 <CardTitle>WhatsApp Integration</CardTitle>
                 <CardDescription>
@@ -199,10 +252,12 @@ export default function Home() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <AnalyticsIcon className="h-6 w-6 text-blue-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                    <BarChart3 className="h-8 w-8 text-blue-600" />
+                  </div>
                 </div>
                 <CardTitle>Smart Analytics</CardTitle>
                 <CardDescription>
@@ -211,10 +266,12 @@ export default function Home() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <SecurityIcon className="h-6 w-6 text-green-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                    <Shield className="h-8 w-8 text-green-600" />
+                  </div>
                 </div>
                 <CardTitle>Secure & Private</CardTitle>
                 <CardDescription>
@@ -223,10 +280,12 @@ export default function Home() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <GlobeIcon className="h-6 w-6 text-purple-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
+                    <Globe className="h-8 w-8 text-purple-600" />
+                  </div>
                 </div>
                 <CardTitle>Custom Branding</CardTitle>
                 <CardDescription>
@@ -235,10 +294,12 @@ export default function Home() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition">
-              <CardHeader>
-                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-                  <GrowthIcon className="h-6 w-6 text-yellow-600" />
+            <Card className="border-2 hover:border-orange-200 transition h-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center">
+                    <TrendingUp className="h-8 w-8 text-yellow-600" />
+                  </div>
                 </div>
                 <CardTitle>Real-time Updates</CardTitle>
                 <CardDescription>
@@ -262,23 +323,30 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
             {[
-              { title: 'Customer Feedback', emoji: '💬', desc: 'NPS surveys, reviews, complaints' },
-              { title: 'Event Registration', emoji: '🎉', desc: 'Webinars, conferences, meetups' },
-              { title: 'Job Applications', emoji: '💼', desc: 'Hiring, internships, freelance' },
-              { title: 'Lead Generation', emoji: '🎯', desc: 'Contact forms, quotes, demos' },
-              { title: 'Order Forms', emoji: '🛒', desc: 'Product orders, bookings, services' },
-              { title: 'Surveys & Polls', emoji: '📊', desc: 'Market research, voting, opinions' },
-              { title: 'Support Tickets', emoji: '🎫', desc: 'Help desk, bug reports, requests' },
-              { title: 'Registrations', emoji: '📝', desc: 'Course signup, membership, subscriptions' },
-            ].map((useCase, i) => (
-              <Card key={i} className="text-center hover:shadow-lg transition">
-                <CardHeader>
-                  <div className="text-4xl mb-3">{useCase.emoji}</div>
-                  <CardTitle className="text-lg">{useCase.title}</CardTitle>
-                  <CardDescription className="text-sm">{useCase.desc}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+              { title: 'Customer Feedback', icon: MessageSquare, desc: 'NPS surveys, reviews, complaints', color: 'bg-gray-100' },
+              { title: 'Event Registration', icon: PartyPopper, desc: 'Webinars, conferences, meetups', color: 'bg-orange-100' },
+              { title: 'Job Applications', icon: Briefcase, desc: 'Hiring, internships, freelance', color: 'bg-amber-100' },
+              { title: 'Lead Generation', icon: Target, desc: 'Contact forms, quotes, demos', color: 'bg-red-100' },
+              { title: 'Order Forms', icon: ShoppingCart, desc: 'Product orders, bookings, services', color: 'bg-gray-100' },
+              { title: 'Surveys & Polls', icon: BarChart3, desc: 'Market research, voting, opinions', color: 'bg-blue-100' },
+              { title: 'Support Tickets', icon: Ticket, desc: 'Help desk, bug reports, requests', color: 'bg-yellow-100' },
+              { title: 'Registrations', icon: ClipboardList, desc: 'Course signup, membership, subscriptions', color: 'bg-orange-100' },
+            ].map((useCase, i) => {
+              const IconComponent = useCase.icon
+              return (
+                <Card key={i} className="text-center hover:shadow-lg transition">
+                  <CardHeader>
+                    <div className="flex justify-center mb-3">
+                      <div className={`w-16 h-16 ${useCase.color} rounded-2xl flex items-center justify-center`}>
+                        <IconComponent className="h-8 w-8 text-gray-700" />
+                      </div>
+                    </div>
+                    <CardTitle className="text-lg">{useCase.title}</CardTitle>
+                    <CardDescription className="text-sm">{useCase.desc}</CardDescription>
+                  </CardHeader>
+                </Card>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -320,7 +388,15 @@ export default function Home() {
               <ul className="space-y-2 text-sm">
                 <li><Link href="#features" className="hover:text-white transition">Features</Link></li>
                 <li><Link href="/templates" className="hover:text-white transition">Templates</Link></li>
-                <li><Link href="/features" className="hover:text-white transition">Pricing</Link></li>
+                <li><Link href="/builder" className="hover:text-white transition">Form Builder</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3 md:mb-4">Open Source</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://github.com/formbharat/formbharat" target="_blank" rel="noopener noreferrer" className="hover:text-white transition flex items-center gap-1">GitHub ↗</a></li>
+                <li><Link href="/open-source" className="hover:text-white transition">Documentation</Link></li>
+                <li><Link href="/open-source#contribute" className="hover:text-white transition">Contribute</Link></li>
               </ul>
             </div>
             <div>
@@ -329,18 +405,18 @@ export default function Home() {
                 <li><Link href="/about" className="hover:text-white transition">About</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition">Contact</Link></li>
                 <li><Link href="/help" className="hover:text-white transition">Help Center</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-3 md:mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
                 <li><Link href="/privacy" className="hover:text-white transition">Privacy</Link></li>
                 <li><Link href="/terms" className="hover:text-white transition">Terms</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 md:pt-8 text-center text-xs md:text-sm">
-            <p>© 2024 FormBharat. Made with ❤️ in India 🇮🇳</p>
+            <p>© 2024 FormBharat. Open Source & Made with ❤️ in India 🇮🇳</p>
+            <p className="text-gray-500 mt-2">
+              <a href="https://github.com/formbharat/formbharat" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">
+                Star us on GitHub ⭐
+              </a>
+            </p>
           </div>
         </div>
       </footer>

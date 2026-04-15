@@ -1,8 +1,22 @@
-# FormBharat
+<div align="center">
 
-Open source form builder for Indian businesses. Create beautiful forms, collect responses, and manage your data.
+# 📝 FormBharat
 
-## Features
+### Open Source Form Builder for Indian Businesses
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Made in India](https://img.shields.io/badge/Made%20in-India%20🇮🇳-orange)](https://formbharat.com)
+
+**[Website](https://formbharat.com)** • **[Documentation](https://formbharat.com/open-source)** • **[Contributing](CONTRIBUTING.md)** • **[License](LICENSE)**
+
+Create beautiful forms, collect responses, and manage your data — all for free, forever.
+
+---
+
+</div>
+
+## ✨ Features
 
 - 🎨 Drag-and-drop form builder
 - 📱 Mobile-responsive forms
@@ -66,10 +80,49 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 - **Authentication**: Supabase Auth
 - **Drag & Drop**: dnd-kit
 
-## License
+## 🤝 Contributing
 
-MIT
+We love contributions! FormBharat is made better by amazing people like you.
 
-## Contributing
+### Ways to Contribute
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- 🐛 **Report Bugs**: Found a bug? [Open an issue](https://github.com/formbharat/formbharat/issues)
+- 💡 **Suggest Features**: Have ideas? We'd love to hear them!
+- 📝 **Improve Documentation**: Help others understand the project better
+- 🌐 **Translate**: Make FormBharat accessible in regional languages
+- 💻 **Code**: Pick an issue and submit a PR
+
+Read our [Contributing Guide](CONTRIBUTING.md) to get started.
+
+### Good First Issues
+
+Looking for a place to start? Check out issues labeled [`good first issue`](https://github.com/formbharat/formbharat/labels/good%20first%20issue).
+
+## 📄 License
+
+FormBharat is [MIT licensed](LICENSE). You can use it for personal or commercial projects, modify it, and distribute it freely.
+
+## 🙏 Acknowledgments
+
+Built with ❤️ by the FormBharat community and powered by:
+- [Next.js](https://nextjs.org/)
+- [Supabase](https://supabase.com/)
+- [Prisma](https://www.prisma.io/)
+- [shadcn/ui](https://ui.shadcn.com/)
+
+## 💬 Community & Support
+
+- 🐦 Twitter: [@formbharat](https://twitter.com/formbharat)
+- 💼 LinkedIn: [FormBharat](https://linkedin.com/company/formbharat)
+- 📧 Email: [hello@formbharat.com](mailto:hello@formbharat.com)
+- 🌐 Website: [formbharat.com](https://formbharat.com)
+
+---
+
+<div align="center">
+
+**[⭐ Star us on GitHub](https://github.com/formbharat/formbharat)** — it motivates us to keep improving!
+
+Made with ❤️ in India 🇮🇳
+
+</div>

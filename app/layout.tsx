@@ -29,18 +29,11 @@ export const metadata: Metadata = {
     siteName: 'FormBharat',
     title: 'FormBharat - Free Form Builder for Indian Businesses',
     description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration, Indian templates, and local support.',
-    images: [{
-      url: '/og-image.jpg',
-      width: 1200,
-      height: 630,
-      alt: 'FormBharat - Form Builder for India'
-    }]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FormBharat - Free Form Builder for Indian Businesses',
     description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration, Indian templates, and local support.',
-    images: ['/og-image.jpg'],
     creator: '@formbharat'
   },
   robots: {
@@ -60,12 +53,6 @@ export const metadata: Metadata = {
       'en-IN': 'https://formbharat.com',
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
-  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({

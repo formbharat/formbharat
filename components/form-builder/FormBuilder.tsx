@@ -11,13 +11,7 @@ import { Card } from '@/components/ui/card'
 import { FormField, FieldType } from '@/lib/types'
 import { SortableField } from './SortableField'
 import { FieldTypeSelector } from './FieldTypeSelector'
-import { 
-  SaveIcon, 
-  EyeIcon, 
-  PlusIcon, 
-  CopyIcon, 
-  SettingsIcon 
-} from '@/components/icons/CustomIcons'
+import { Save, Eye, Plus, FileText, Palette, Settings, ChevronLeft, LayoutGrid, Home, HelpCircle, BookTemplate } from 'lucide-react'
 import Link from 'next/link'
 
 interface FormBuilderProps {
@@ -96,44 +90,120 @@ export function FormBuilder({
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
+            {/* Left Section - Logo & Navigation */}
+            <div className="flex items-center gap-3 md:gap-4">
               <Link href="/" className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">F</span>
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
                   FormBharat
                 </span>
               </Link>
-              <div className="h-6 w-px bg-gray-300" />
-              <h1 className="text-lg font-semibold text-gray-700">Form Builder</h1>
+              
+              <div className="hidden md:flex items-center gap-2">
+                <div className="h-6 w-px bg-gray-300" />
+                <h1 className="text-lg font-semibold text-gray-700">Form Builder</h1>
+              </div>
             </div>
+
+            {/* Middle Section - Quick Nav (Desktop) */}
+            <nav className="hidden lg:flex items-center gap-2">
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                  <Home className="mr-2 h-4 w-4" />
+                  Home
+                </Button>
+              </Link>
+              <Link href="/templates">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                  <BookTemplate className="mr-2 h-4 w-4" />
+                  Templates
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                  <LayoutGrid className="mr-2 h-4 w-4" />
+                  My Forms
+                </Button>
+              </Link>
+              <Link href="/help">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  Help
+                </Button>
+              </Link>
+            </nav>
+
+            {/* Right Section - Action Buttons */}
             <div className="flex gap-2">
               {onPreview && (
-                <Button variant="outline">
-                  <EyeIcon className="mr-2 h-4 w-4" />
-                  Preview
+                <Button variant="outline" size="sm" className="hidden sm:flex">
+                  <Eye className="mr-0 sm:mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Preview</span>
                 </Button>
               )}
-              <Button onClick={handleSave} className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
-                <SaveIcon className="mr-2 h-4 w-4" />
-                Save Form
+              <Button 
+                onClick={handleSave} 
+                size="sm"
+                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
+              >
+                <Save className="mr-0 sm:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Save Form</span>
+                <span className="sm:hidden">Save</span>
               </Button>
             </div>
           </div>
+
+          {/* Mobile Navigation */}
+          <nav className="lg:hidden flex items-center gap-2 mt-3 pt-3 border-t overflow-x-auto">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 flex-shrink-0">
+                <Home className="mr-1 h-4 w-4" />
+                <span className="text-xs">Home</span>
+              </Button>
+            </Link>
+            <Link href="/templates">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 flex-shrink-0">
+                <BookTemplate className="mr-1 h-4 w-4" />
+                <span className="text-xs">Templates</span>
+              </Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 flex-shrink-0">
+                <LayoutGrid className="mr-1 h-4 w-4" />
+                <span className="text-xs">My Forms</span>
+              </Button>
+            </Link>
+            <Link href="/help">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 flex-shrink-0">
+                <HelpCircle className="mr-1 h-4 w-4" />
+                <span className="text-xs">Help</span>
+              </Button>
+            </Link>
+          </nav>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-gray-900 transition">
+            Home
+          </Link>
+          <ChevronLeft className="h-4 w-4 rotate-180" />
+          <span className="text-gray-900 font-medium">Form Builder</span>
+        </div>
+
         <div className="grid lg:grid-cols-[300px_1fr] gap-6">
           {/* Sidebar - Field Types */}
           <div className="lg:sticky lg:top-24 h-fit">
             <Card className="p-4">
               <h2 className="font-semibold mb-4 flex items-center gap-2">
-                <PlusIcon className="h-5 w-5 text-orange-500" />
+                <Plus className="h-5 w-5 text-orange-500" />
                 Add Fields
               </h2>
               <FieldTypeSelector onSelectType={addField} />
@@ -145,7 +215,7 @@ export function FormBuilder({
             {/* Form Settings */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-6">
-                <CopyIcon className="h-5 w-5 text-orange-500" />
+                <FileText className="h-5 w-5 text-orange-500" />
                 <h2 className="text-lg font-semibold">Form Details</h2>
               </div>
               <div className="space-y-4">
@@ -179,7 +249,7 @@ export function FormBuilder({
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
-                  <CopyIcon className="h-5 w-5 text-orange-500" />
+                  <FileText className="h-5 w-5 text-orange-500" />
                   <h2 className="text-lg font-semibold">Form Fields</h2>
                 </div>
                 <span className="text-sm text-gray-500">{fields.length} field{fields.length !== 1 ? 's' : ''}</span>
@@ -188,7 +258,7 @@ export function FormBuilder({
               {fields.length === 0 ? (
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <PlusIcon className="h-8 w-8 text-gray-400" />
+                    <Plus className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="font-medium text-gray-900 mb-2">No fields yet</h3>
                   <p className="text-gray-500 text-sm mb-4">

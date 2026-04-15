@@ -8,12 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { FormField } from '@/lib/types'
-import { 
-  GripIcon, 
-  TrashIcon, 
-  PlusIcon, 
-  CloseIcon 
-} from '@/components/icons/CustomIcons'
+import { GripVertical, Trash2, Plus, X } from 'lucide-react'
 import { useState } from 'react'
 
 interface SortableFieldProps {
@@ -64,7 +59,7 @@ export function SortableField({ field, onUpdate, onDelete }: SortableFieldProps)
             {...listeners}
             className="flex items-center cursor-grab active:cursor-grabbing"
           >
-            <GripIcon className="h-5 w-5 text-muted-foreground" />
+            <GripVertical className="h-5 w-5 text-muted-foreground" />
           </div>
 
           <div className="flex-1 space-y-4">
@@ -106,7 +101,7 @@ export function SortableField({ field, onUpdate, onDelete }: SortableFieldProps)
                         size="icon"
                         onClick={() => removeOption(index)}
                       >
-                        <CloseIcon className="h-4 w-4" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
@@ -123,7 +118,7 @@ export function SortableField({ field, onUpdate, onDelete }: SortableFieldProps)
                       }}
                     />
                     <Button onClick={addOption} size="icon">
-                      <PlusIcon className="h-4 w-4" />
+                      <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -146,7 +141,7 @@ export function SortableField({ field, onUpdate, onDelete }: SortableFieldProps)
               onClick={() => onDelete(field.id)}
               className="text-destructive hover:text-destructive"
             >
-              <TrashIcon className="h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
