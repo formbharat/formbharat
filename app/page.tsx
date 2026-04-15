@@ -1,26 +1,3 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Free Form Builder for Indian Businesses - Create Forms in Minutes',
-  description: 'Create beautiful forms, surveys, and quizzes for free with FormBharat. Built for Indian businesses with WhatsApp integration, Indian templates (GST, LPA), and local support. No coding required.',
-  keywords: ['form builder India', 'free form creator', 'online forms', 'WhatsApp forms', 'Indian business forms', 'survey maker India', 'form templates'],
-  alternates: {
-    canonical: 'https://formbharat.com',
-  },
-  openGraph: {
-    title: 'Free Form Builder for Indian Businesses - Create Forms in Minutes',
-    description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration and Indian templates.',
-    url: 'https://formbharat.com',
-    type: 'website',
-    images: [{
-      url: '/og-image.jpg',
-      width: 1200,
-      height: 630,
-      alt: 'FormBharat - Free Form Builder for India'
-    }],
-  },
-}
-
 'use client'
 
 import { useState } from 'react'

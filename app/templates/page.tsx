@@ -1,20 +1,3 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Free Form Templates - Business, Events, HR & More | FormBharat',
-  description: 'Browse 12+ professionally designed form templates. Free templates for events, job applications, customer feedback, order forms, and more. Customize and use instantly.',
-  keywords: ['form templates', 'free form templates', 'event registration form', 'job application form', 'feedback form template', 'order form template', 'India form templates'],
-  alternates: {
-    canonical: 'https://formbharat.com/templates',
-  },
-  openGraph: {
-    title: 'Free Form Templates - Ready to Use | FormBharat',
-    description: '12+ professionally designed form templates for business, events, HR, and more. Customize and deploy in minutes.',
-    url: 'https://formbharat.com/templates',
-    type: 'website',
-  },
-}
-
 'use client'
 
 import { useState } from 'react'

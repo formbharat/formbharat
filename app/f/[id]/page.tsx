@@ -1,63 +1,8 @@
-import type { Metadata } from 'next'
-
-interface FormData {
-  id: string
-  title: string
-  description?: string
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  try {
-    // Fetch form data for metadata generation
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://formbharat.com'}/api/forms/${params.id}`, {
-      cache: 'no-store',
-    })
-    
-    if (!response.ok) {
-      return {
-        title: 'Form Not Found | FormBharat',
-        description: 'The form you are looking for does not exist or has been removed.',
-        robots: { index: false, follow: false },
-      }
-    }
-    
-    const form: FormData = await response.json()
-    
-    return {
-      title: `${form.title} | FormBharat`,
-      description: form.description || `Fill out this form on FormBharat. Secure, fast, and free form builder for Indian businesses.`,
-      keywords: ['online form', 'survey', 'form builder', 'Indian forms'],
-      alternates: {
-        canonical: `https://formbharat.com/f/${params.id}`,
-      },
-      openGraph: {
-        title: form.title,
-        description: form.description || `Fill out this form on FormBharat`,
-        url: `https://formbharat.com/f/${params.id}`,
-        type: 'website',
-      },
-      twitter: {
-        card: 'summary',
-        title: form.title,
-        description: form.description || `Fill out this form on FormBharat`,
-      },
-      robots: {
-        index: true,
-        follow: true,
-      },
-    }
-  } catch (error) {
-    return {
-      title: 'Form | FormBharat',
-      description: 'Fill out this form on FormBharat - Free form builder for Indian businesses.',
-    }
-  }
-}
-
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -67,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast'
 import { FormField } from '@/lib/types'
 import { Loader2, CheckCircle2, Share2 } from 'lucide-react'
-import Link from 'next/link'
 
 export default function PublicFormPage() {
   const params = useParams()

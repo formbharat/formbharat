@@ -1,20 +1,3 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Help Center - FormBharat Documentation & Guides',
-  description: 'Find help articles, guides, and documentation for FormBharat. Learn how to create forms, use templates, collect responses, and integrate with other tools.',
-  keywords: ['FormBharat help', 'form builder documentation', 'how to create forms', 'form builder guide', 'form builder tutorial'],
-  alternates: {
-    canonical: 'https://formbharat.com/help',
-  },
-  openGraph: {
-    title: 'FormBharat Help Center - Documentation & Guides',
-    description: 'Find answers to your questions. Browse our knowledge base or contact support.',
-    url: 'https://formbharat.com/help',
-    type: 'website',
-  },
-}
-
 'use client'
 
 import { useState } from 'react'
