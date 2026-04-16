@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { getArticle, getPillar, pillars } from '@/lib/resources'
 import { ArrowRight, ArrowLeft, Clock, Calendar, ChevronRight, CheckCircle2, BookOpen, List } from 'lucide-react'
+import { PillarIcon } from '@/components/PillarIcon'
 import Script from 'next/script'
 
 function toAnchor(text: string) {
@@ -147,7 +148,7 @@ export default async function ArticlePage({
                 href={`/resources/${pillarSlug}`}
                 className="flex items-center gap-2 mb-3 group"
               >
-                <span className="text-xl">{pillar.icon}</span>
+                <PillarIcon slug={pillarSlug} size="sm" />
                 <span className={`text-sm font-bold ${textColorMap[pillar.color]} leading-tight`}>
                   {pillar.title}
                 </span>
@@ -186,7 +187,7 @@ export default async function ArticlePage({
                       href={`/resources/${p.slug}`}
                       className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 px-2 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                      <span>{p.icon}</span>
+                      <PillarIcon slug={p.slug} size="sm" />
                       <span className="leading-tight truncate">{p.title.split(' ').slice(0, 3).join(' ')}</span>
                     </Link>
                   ))}

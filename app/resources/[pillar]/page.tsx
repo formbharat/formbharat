@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import { getPillar, pillars } from '@/lib/resources'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowRight, ArrowLeft, Clock, ChevronRight } from 'lucide-react'
+import { PillarIcon } from '@/components/PillarIcon'
 import Script from 'next/script'
 
 const textColorMap: Record<string, string> = {
@@ -79,7 +80,7 @@ export default async function PillarPage({
       {/* Hero */}
       <section className={`py-14 px-4 sm:px-6 ${bgLightMap[pillar.color]}`}>
         <div className="max-w-3xl mx-auto">
-          <div className="text-5xl mb-4">{pillar.icon}</div>
+          <PillarIcon slug={pillar.slug} size="xl" className="mb-4" />
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
             {pillar.title}
           </h1>
@@ -162,7 +163,7 @@ export default async function PillarPage({
                   href={`/resources/${p.slug}`}
                   className="flex flex-col items-center gap-2 bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 hover:shadow-sm transition-all group"
                 >
-                  <span className="text-2xl">{p.icon}</span>
+                  <PillarIcon slug={p.slug} size="md" />
                   <span className="text-xs font-medium text-gray-700 leading-tight group-hover:text-orange-600 transition-colors">
                     {p.title.split(':')[0].split(' ').slice(0, 3).join(' ')}
                   </span>

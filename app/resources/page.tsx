@@ -4,6 +4,7 @@ import Footer from '@/components/Footer'
 import { pillars } from '@/lib/resources'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowRight, BookOpen, Clock } from 'lucide-react'
+import { PillarIcon } from '@/components/PillarIcon'
 import Script from 'next/script'
 
 const colorMap: Record<string, string> = {
@@ -78,7 +79,7 @@ export default function ResourcesPage() {
               >
                 <Card className={`h-full border-2 transition-all duration-200 ${colorMap[pillar.color]} group-hover:shadow-md`}>
                   <CardHeader className="pb-3">
-                    <div className="text-4xl mb-3">{pillar.icon}</div>
+                    <PillarIcon slug={pillar.slug} size="lg" className="mb-3" />
                     <CardTitle className="text-xl text-gray-900 group-hover:text-orange-600 transition-colors">
                       {pillar.title}
                     </CardTitle>
@@ -131,7 +132,7 @@ export default function ResourcesPage() {
                   href={`/resources/${pillar.slug}/${article.slug}`}
                   className="group bg-white rounded-xl border border-gray-200 p-5 hover:border-orange-300 hover:shadow-sm transition-all"
                 >
-                  <div className="text-2xl mb-3">{pillar.icon}</div>
+                  <PillarIcon slug={pillar.slug} size="md" className="mb-3" />
                   <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-2 group-hover:text-orange-600 transition-colors line-clamp-2">
                     {article.title}
                   </h3>
