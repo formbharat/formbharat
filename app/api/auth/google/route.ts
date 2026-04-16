@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const isDev = process.env.NODE_ENV === 'development'
     const origin = isDev
       ? (request.headers.get('origin') || 'http://localhost:3000')
-      : 'https://formbharat.com'
+      : (process.env.NEXT_PUBLIC_APP_URL || request.headers.get('origin') || 'http://localhost:3000')
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
