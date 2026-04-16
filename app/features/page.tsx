@@ -4,179 +4,102 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { 
+import {
   Zap, MessageSquare, BarChart3, Webhook, Mail, FileText,
   Layers, Share2, Download, Shield, Clock,
-  Smartphone, Globe, Users, CheckCircle2, Star, TrendingUp,
-  Lock, Database, Code2, ArrowRight, Link2, Copy, LayoutTemplate, GitBranch, ShieldCheck
+  Smartphone, Globe, Users, CheckCircle2, TrendingUp,
+  Lock, Database, Code2, ArrowRight, Check, X
 } from 'lucide-react'
 
-const features = [
+const featureGroups = [
   {
-    category: 'Form Building',
+    label: 'Form Building',
     icon: FileText,
-    bgClass: 'bg-orange-100', textClass: 'text-orange-600',
+    bg: 'bg-orange-50',
+    color: 'text-orange-500',
     items: [
-      {
-        name: 'Drag & Drop Builder',
-        description: 'Intuitive form builder with visual editor. Reorder fields by dragging.',
-        icon: Zap,
-      },
-      {
-        name: '8 Field Types',
-        description: 'Text, email, phone, textarea, dropdown, radio, checkbox, and file upload.',
-        icon: Layers,
-      },
-      {
-        name: '12 Ready Templates',
-        description: 'Professional templates for events, jobs, orders, feedback, and more.',
-        icon: LayoutTemplate,
-      },
-      {
-        name: 'Multi-Step Forms',
-        description: 'Break long forms into multiple pages for better user experience.',
-        icon: GitBranch,
-      },
-    ]
+      { icon: Zap, name: 'Drag & Drop Builder', desc: 'Visual editor. Reorder fields instantly by dragging.' },
+      { icon: Layers, name: '8 Field Types', desc: 'Text, email, phone, dropdown, radio, checkbox, file upload.' },
+      { icon: FileText, name: '12 Ready Templates', desc: 'Events, jobs, orders, feedback — professionally designed.' },
+      { icon: Layers, name: 'Multi-Step Forms', desc: 'Break long forms into pages for better completion rates.' },
+    ],
   },
   {
-    category: 'India-Specific',
+    label: 'India-Specific',
     icon: MessageSquare,
-    bgClass: 'bg-green-100', textClass: 'text-green-600',
+    bg: 'bg-green-50',
+    color: 'text-green-500',
     items: [
-      {
-        name: 'WhatsApp Integration',
-        description: 'Share forms directly on WhatsApp with one click. Perfect for 500M+ Indian users.',
-        icon: MessageSquare,
-        highlight: true,
-      },
-      {
-        name: 'Indian Templates',
-        description: 'Templates designed for Indian businesses: GST fields, LPA salary, Indian phone format.',
-        icon: Globe,
-      },
-      {
-        name: 'Regional Support',
-        description: 'Form fields optimized for Indian use cases and business needs.',
-        icon: Users,
-      },
-    ]
+      { icon: MessageSquare, name: 'WhatsApp Sharing', desc: 'One-click share to WhatsApp. Built for 500M+ Indian users.', highlight: true },
+      { icon: Globe, name: 'Indian Templates', desc: 'GST fields, LPA salary ranges, Indian phone format.' },
+      { icon: Users, name: 'Local Use Cases', desc: 'Forms built around how Indian SMBs actually operate.' },
+    ],
   },
   {
-    category: 'Analytics & Insights',
+    label: 'Analytics',
     icon: BarChart3,
-    bgClass: 'bg-blue-100', textClass: 'text-blue-600',
+    bg: 'bg-blue-50',
+    color: 'text-blue-500',
     items: [
-      {
-        name: 'Analytics Dashboard',
-        description: 'View response trends, completion rates, and field-level analytics with charts.',
-        icon: BarChart3,
-      },
-      {
-        name: 'Export to CSV',
-        description: 'Download all responses as CSV for Excel, Google Sheets, or any tool.',
-        icon: Download,
-      },
-      {
-        name: 'Real-time Updates',
-        description: 'See responses appear instantly in your dashboard as they come in.',
-        icon: TrendingUp,
-      },
-      {
-        name: 'Response Tracking',
-        description: 'Track when forms were submitted, completion time, and user behavior.',
-        icon: Clock,
-      },
-    ]
+      { icon: BarChart3, name: 'Analytics Dashboard', desc: 'Response trends, completion rates, and field-level data.' },
+      { icon: Download, name: 'CSV Export', desc: 'Download responses for Excel, Sheets, or any tool.' },
+      { icon: TrendingUp, name: 'Real-time Updates', desc: 'Responses appear in your dashboard the moment they arrive.' },
+      { icon: Clock, name: 'Response Tracking', desc: 'Submission timestamps and completion time tracking.' },
+    ],
   },
   {
-    category: 'Integrations',
+    label: 'Integrations',
     icon: Webhook,
-    bgClass: 'bg-purple-100', textClass: 'text-purple-600',
+    bg: 'bg-purple-50',
+    color: 'text-purple-500',
     items: [
-      {
-        name: 'Webhooks',
-        description: 'Send form data to any URL. Integrate with Zapier, Make, n8n, or custom backends.',
-        icon: Webhook,
-      },
-      {
-        name: 'Email Notifications',
-        description: 'Get instant email alerts when forms are submitted. Multiple recipients supported.',
-        icon: Mail,
-      },
-      {
-        name: 'API Access',
-        description: 'REST API for programmatic access to forms and responses.',
-        icon: Code2,
-      },
-    ]
+      { icon: Webhook, name: 'Webhooks', desc: 'Send data to Zapier, Make, n8n, or your own backend.' },
+      { icon: Mail, name: 'Email Notifications', desc: 'Instant alerts on submission. Multiple recipients.' },
+      { icon: Code2, name: 'REST API', desc: 'Programmatic access to forms and all response data.' },
+    ],
   },
   {
-    category: 'Sharing & Distribution',
+    label: 'Sharing',
     icon: Share2,
-    bgClass: 'bg-pink-100', textClass: 'text-pink-600',
+    bg: 'bg-pink-50',
+    color: 'text-pink-500',
     items: [
-      {
-        name: 'Public Links',
-        description: 'Share forms with a simple URL. No login required for respondents.',
-        icon: Link2,
-      },
-      {
-        name: 'Copy Link',
-        description: 'One-click copy to share via email, SMS, or any platform.',
-        icon: Copy,
-      },
-      {
-        name: 'Embed Forms',
-        description: 'Embed forms on your website with a simple iframe.',
-        icon: Code2,
-      },
-      {
-        name: 'Mobile Responsive',
-        description: 'All forms work perfectly on desktop, tablet, and mobile devices.',
-        icon: Smartphone,
-      },
-    ]
+      { icon: Share2, name: 'Public Links', desc: 'One shareable URL. No login needed for respondents.' },
+      { icon: Code2, name: 'Embed', desc: 'Drop forms into your website with a simple iframe.' },
+      { icon: Smartphone, name: 'Mobile Responsive', desc: 'Works perfectly on every screen size, always.' },
+    ],
   },
   {
-    category: 'Security & Reliability',
+    label: 'Security',
     icon: Shield,
-    bgClass: 'bg-red-100', textClass: 'text-red-600',
+    bg: 'bg-slate-50',
+    color: 'text-slate-500',
     items: [
-      {
-        name: 'Secure Hosting',
-        description: 'HTTPS encryption for all forms. Your data is safe and secure.',
-        icon: ShieldCheck,
-      },
-      {
-        name: 'Data Privacy',
-        description: 'Your responses are private. We never sell or share your data.',
-        icon: Lock,
-      },
-      {
-        name: 'Reliable Storage',
-        description: 'Powered by Supabase PostgreSQL. Enterprise-grade database.',
-        icon: Database,
-      },
-    ]
+      { icon: Shield, name: 'HTTPS Encryption', desc: 'All forms served over secure connections.' },
+      { icon: Lock, name: 'Data Privacy', desc: 'Your data is yours. We never sell or share it.' },
+      { icon: Database, name: 'Reliable Storage', desc: 'Supabase PostgreSQL — enterprise-grade database.' },
+    ],
   },
 ]
 
-const comparisonFeatures = [
-  { name: 'Unlimited Forms', formBharat: true, typeform: false, googleForms: true, jotform: false },
-  { name: 'Unlimited Responses', formBharat: true, typeform: false, googleForms: true, jotform: false },
-  { name: 'WhatsApp Sharing', formBharat: true, typeform: false, googleForms: false, jotform: false },
-  { name: 'Analytics Dashboard', formBharat: true, typeform: true, googleForms: true, jotform: true },
-  { name: 'Multi-Step Forms', formBharat: true, typeform: true, googleForms: false, jotform: true },
-  { name: 'Webhook Integration', formBharat: true, typeform: true, googleForms: false, jotform: true },
-  { name: 'CSV Export', formBharat: true, typeform: true, googleForms: true, jotform: true },
-  { name: 'Custom Branding', formBharat: true, typeform: false, googleForms: false, jotform: false },
-  { name: 'File Uploads', formBharat: true, typeform: false, googleForms: true, jotform: true },
-  { name: 'Email Notifications', formBharat: true, typeform: true, googleForms: false, jotform: true },
-  { name: 'No Credit Card', formBharat: true, typeform: false, googleForms: true, jotform: false },
-  { name: 'Indian Templates', formBharat: true, typeform: false, googleForms: false, jotform: false },
+const comparison = [
+  { name: 'Unlimited Forms',       fb: true,  tf: false, gf: true,  jf: false },
+  { name: 'Unlimited Responses',   fb: true,  tf: false, gf: true,  jf: false },
+  { name: 'WhatsApp Sharing',      fb: true,  tf: false, gf: false, jf: false },
+  { name: 'Analytics Dashboard',   fb: true,  tf: true,  gf: true,  jf: true  },
+  { name: 'Multi-Step Forms',      fb: true,  tf: true,  gf: false, jf: true  },
+  { name: 'Webhooks',              fb: true,  tf: true,  gf: false, jf: true  },
+  { name: 'CSV Export',            fb: true,  tf: true,  gf: true,  jf: true  },
+  { name: 'Custom Branding',       fb: true,  tf: false, gf: false, jf: false },
+  { name: 'Email Notifications',   fb: true,  tf: true,  gf: false, jf: true  },
+  { name: 'No Credit Card',        fb: true,  tf: false, gf: true,  jf: false },
+  { name: 'Indian Templates',      fb: true,  tf: false, gf: false, jf: false },
 ]
+
+function Tick({ on, primary }: { on: boolean; primary?: boolean }) {
+  if (on) return <Check className={`w-4 h-4 mx-auto ${primary ? 'text-orange-500' : 'text-gray-400'}`} strokeWidth={2.5} />
+  return <X className="w-4 h-4 mx-auto text-gray-200" strokeWidth={2} />
+}
 
 export default function FeaturesPage() {
   return (
@@ -184,67 +107,64 @@ export default function FeaturesPage() {
       <Header />
 
       {/* Hero */}
-      <section className="py-12 md:py-20 px-4">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
-            Everything you need to create <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-              powerful forms
+      <section className="pt-16 md:pt-24 pb-14 md:pb-20 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-4">Features</p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-5 leading-[1.1]">
+            Everything you need,<br />
+            <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+              nothing you don't
             </span>
           </h1>
-          <p className="text-base md:text-lg lg:text-xl text-gray-600 mb-6 md:mb-8 max-w-3xl mx-auto px-4">
-            FormBharat combines the best features of global form builders with India-specific needs. 
-            Build, share via WhatsApp, and analyze — all for free.
+          <p className="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
+            Built for Indian businesses. All features free during early access — no credit card, no limits.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
-            <Link href="/builder" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-pink-500">
-                Start Building Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/builder">
+              <Button size="lg" className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 shadow-sm px-8">
+                Start building free <ArrowRight className="ml-1.5 w-4 h-4" />
               </Button>
             </Link>
-            <Link href="/templates" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                Browse Templates
-              </Button>
+            <Link href="/templates">
+              <Button size="lg" variant="outline" className="px-8">Browse templates</Button>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-12 md:py-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          {features.map((category, idx) => {
-            const CategoryIcon = category.icon
+      <section className="py-16 md:py-20 px-4 border-t border-gray-100">
+        <div className="max-w-6xl mx-auto space-y-16">
+          {featureGroups.map((group) => {
+            const GroupIcon = group.icon
             return (
-              <div key={idx} className="mb-12 md:mb-16">
-                <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
-                  <div className={`w-10 md:w-12 h-10 md:h-12 ${category.bgClass} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                    <CategoryIcon className={`h-5 md:h-6 w-5 md:w-6 ${category.textClass}`} />
+              <div key={group.label}>
+                <div className="flex items-center gap-2.5 mb-6">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${group.bg}`}>
+                    <GroupIcon className={`w-4 h-4 ${group.color}`} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold">{category.category}</h2>
+                  <h2 className="text-lg font-semibold text-gray-900">{group.label}</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                  {category.items.map((feature, featureIdx) => {
-                    const FeatureIcon = feature.icon
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {group.items.map((item) => {
+                    const ItemIcon = item.icon
                     return (
-                      <Card key={featureIdx} className={`${feature.highlight ? 'ring-2 ring-green-500 shadow-lg' : ''}`}>
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <FeatureIcon className="h-5 w-5 text-orange-600" />
-                                <CardTitle className="text-lg">{feature.name}</CardTitle>
-                                {feature.highlight && (
-                                  <Star className="h-4 w-4 text-green-600 fill-green-600" />
-                                )}
-                              </div>
-                              <CardDescription>{feature.description}</CardDescription>
-                            </div>
-                          </div>
-                        </CardHeader>
-                      </Card>
+                      <div
+                        key={item.name}
+                        className={`rounded-xl p-4 flex gap-3 border ${
+                          item.highlight
+                            ? 'border-green-200 bg-green-50/50'
+                            : 'border-gray-100 bg-gray-50/50 hover:bg-white hover:border-gray-200'
+                        } transition-all`}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                          <ItemIcon className="w-4 h-4 text-gray-500" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800 mb-0.5">{item.name}</p>
+                          <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
                     )
                   })}
                 </div>
@@ -254,115 +174,67 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Comparison Table */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">How FormBharat Compares</h2>
-            <p className="text-xl text-gray-600">
-              See how we stack up against popular form builders
-            </p>
+      {/* Comparison */}
+      <section className="py-16 md:py-20 px-4 bg-gray-50/50 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">How we compare</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">FormBharat vs the rest</h2>
           </div>
-
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left font-semibold">Feature</th>
-                    <th className="px-6 py-4 text-center font-semibold">
-                      <div className="flex flex-col items-center">
-                        <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent font-bold">FormBharat</span>
-                        <span className="text-xs text-green-600 font-normal">FREE</span>
-                      </div>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="px-5 py-4 text-left text-gray-500 font-medium w-[40%]">Feature</th>
+                    <th className="px-4 py-4 text-center font-semibold">
+                      <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">FormBharat</span>
+                      <div className="text-[10px] font-normal text-green-500 mt-0.5">FREE</div>
                     </th>
-                    <th className="px-6 py-4 text-center font-semibold text-gray-600">
-                      <div className="flex flex-col items-center">
-                        <span>Typeform</span>
-                        <span className="text-xs text-gray-500 font-normal">from $25/mo</span>
-                      </div>
+                    <th className="px-4 py-4 text-center text-gray-400 font-medium">
+                      Typeform
+                      <div className="text-[10px] font-normal text-gray-400 mt-0.5">$25/mo</div>
                     </th>
-                    <th className="px-6 py-4 text-center font-semibold text-gray-600">
-                      <div className="flex flex-col items-center">
-                        <span>Google Forms</span>
-                        <span className="text-xs text-green-600 font-normal">FREE</span>
-                      </div>
+                    <th className="px-4 py-4 text-center text-gray-400 font-medium">
+                      Google
+                      <div className="text-[10px] font-normal text-green-500 mt-0.5">FREE</div>
                     </th>
-                    <th className="px-6 py-4 text-center font-semibold text-gray-600">
-                      <div className="flex flex-col items-center">
-                        <span>JotForm</span>
-                        <span className="text-xs text-gray-500 font-normal">from $34/mo</span>
-                      </div>
+                    <th className="px-4 py-4 text-center text-gray-400 font-medium">
+                      JotForm
+                      <div className="text-[10px] font-normal text-gray-400 mt-0.5">$34/mo</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y">
-                  {comparisonFeatures.map((feature, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 font-medium">{feature.name}</td>
-                      <td className="px-6 py-4 text-center">
-                        {feature.formBharat ? (
-                          <CheckCircle2 className="h-6 w-6 text-green-600 mx-auto" />
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {feature.typeform ? (
-                          <CheckCircle2 className="h-6 w-6 text-gray-400 mx-auto" />
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {feature.googleForms ? (
-                          <CheckCircle2 className="h-6 w-6 text-gray-400 mx-auto" />
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {feature.jotform ? (
-                          <CheckCircle2 className="h-6 w-6 text-gray-400 mx-auto" />
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
+                <tbody className="divide-y divide-gray-50">
+                  {comparison.map((row) => (
+                    <tr key={row.name} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-5 py-3 text-gray-700 font-medium">{row.name}</td>
+                      <td className="px-4 py-3"><Tick on={row.fb} primary /></td>
+                      <td className="px-4 py-3"><Tick on={row.tf} /></td>
+                      <td className="px-4 py-3"><Tick on={row.gf} /></td>
+                      <td className="px-4 py-3"><Tick on={row.jf} /></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-          <div className="mt-8 text-center">
-            <p className="text-gray-600 mb-4">
-              ⭐ FormBharat gives you more features for <strong>FREE</strong> than others charge $25-34/month for
-            </p>
-          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 bg-gradient-to-br from-orange-500 to-pink-500 text-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to build your first form?
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of Indian businesses using FormBharat
-          </p>
-          <div className="flex gap-4 justify-center">
+      <section className="py-16 md:py-20 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ready to build your first form?</h2>
+          <p className="text-gray-500 mb-8">Free during early access. No credit card needed.</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/builder">
-              <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100">
-                Start Building Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Button size="lg" className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 shadow-sm px-8">
+                Start building free <ArrowRight className="ml-1.5 w-4 h-4" />
               </Button>
             </Link>
             <Link href="/templates">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Browse Templates
-              </Button>
+              <Button size="lg" variant="outline" className="px-8">Browse templates</Button>
             </Link>
           </div>
         </div>
