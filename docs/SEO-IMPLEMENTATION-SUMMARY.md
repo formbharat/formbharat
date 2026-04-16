@@ -1,6 +1,9 @@
-# FormBharat SEO Implementation Summary
-**Date:** April 15, 2026  
-**Status:** Phase 1 Complete
+# ⚠️ SUPERSEDED
+
+**→ See: [SEO-AUDIT-APR-16-2026.md](./SEO-AUDIT-APR-16-2026.md)** — canonical SEO doc.
+
+---
+# (archived content below)
 
 ---
 

@@ -40,8 +40,8 @@ export default function Header() {
           <nav className="hidden md:flex gap-6 lg:gap-8 items-center">
             <Link href="/features" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Features</Link>
             <Link href="/templates" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Templates</Link>
+            <Link href="/resources" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Resources</Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">About</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition text-sm lg:text-base">Contact</Link>
             
             {isLoggedIn ? (
               <>
@@ -87,6 +87,7 @@ export default function Header() {
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-3 border-t pt-4">
             <Link href="/features" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
             <Link href="/templates" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Templates</Link>
+            <Link href="/resources" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Resources</Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
             <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
             

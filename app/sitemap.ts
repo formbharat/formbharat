@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { pillars } from '@/lib/resources'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://formbharat.com'
@@ -88,5 +89,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }))
 
-  return [...staticPages, ...helpArticles]
+  // Resources hub
+  const resourcesHub = [
+    {
+      url: `${baseUrl}/resources`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+  ]
+
+  // Resources pillar pages
+  const resourcesPillars = pillars.map((pillar) => ({
+    url: `${baseUrl}/resources/${pillar.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
+
+  // Resources articles
+  const resourcesArticles = pillars.flatMap((pillar) =>
+    pillar.articles.map((article) => ({
+      url: `${baseUrl}/resources/${pillar.slug}/${article.slug}`,
+      lastModified: new Date(article.publishDate),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }))
+  )
+
+  return [...staticPages, ...helpArticles, ...resourcesHub, ...resourcesPillars, ...resourcesArticles]
 }
