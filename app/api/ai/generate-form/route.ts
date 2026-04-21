@@ -114,9 +114,10 @@ JSON Schema:
       userPrompt += `\n\nForm type: ${formType}`
     }
 
-    // 6. Invoke Bedrock (use Claude Haiku for speed + cost efficiency)
+    // 6. Invoke Bedrock (use Llama 3 70B - no use case approval needed)
+    // TODO: Switch to Claude Haiku after submitting use case to AWS
     const { text, usage } = await invokeBedrock({
-      model: 'anthropic.claude-3-haiku-20240307-v1:0',
+      model: 'meta.llama3-70b-instruct-v1:0',
       systemPrompt,
       prompt: userPrompt,
       maxTokens: 2000,
@@ -150,7 +151,7 @@ JSON Schema:
 
     // 9. Log usage for analytics and billing
     const cost = calculateCost(
-      'anthropic.claude-3-haiku-20240307-v1:0',
+      'meta.llama3-70b-instruct-v1:0',
       usage.inputTokens,
       usage.outputTokens
     )

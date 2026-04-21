@@ -30,13 +30,13 @@ FormBharat now uses **AWS Bedrock** for AI features, giving you access to multip
 1. Go to AWS Console → **Bedrock** → **Model access**
 2. Click **"Manage model access"**
 3. Enable these models:
-   - ✅ **Anthropic Claude 3 Haiku** (default - fast & cheap)
-   - ✅ **Anthropic Claude 3.5 Sonnet** (optional - best quality)
-   - ✅ **Meta Llama 3 70B** (optional - open source)
-   - ✅ **Mistral Large** (optional - European)
+   - ✅ **Meta Llama 3 70B** (default - no use case needed, instant approval)
+   - 📝 **Anthropic Claude 3 Haiku** (requires use case - see end of doc)
+   - 📝 **Anthropic Claude 3.5 Sonnet** (requires use case - best quality)
+   - ✅ **Mistral Large** (optional - European, instant approval)
 
 4. Click **"Request model access"**
-5. Wait 2-5 minutes for approval (usually instant)
+5. Wait 2-5 minutes for approval (Llama 3 & Mistral are instant)
 
 ### 1.2 Verify Access
 
@@ -71,15 +71,17 @@ Click **"Add permissions"** → **"Create inline policy"**
         "bedrock:InvokeModel"
       ],
       "Resource": [
-        "arn:aws:bedrock:ap-south-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0",
-        "arn:aws:bedrock:ap-south-1::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0",
         "arn:aws:bedrock:ap-south-1::foundation-model/meta.llama3-70b-instruct-v1:0",
-        "arn:aws:bedrock:ap-south-1::foundation-model/mistral.mistral-large-2402-v1:0"
+        "arn:aws:bedrock:ap-south-1::foundation-model/mistral.mistral-large-2402-v1:0",
+        "arn:aws:bedrock:ap-south-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0",
+        "arn:aws:bedrock:ap-south-1::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0"
       ]
     }
   ]
 }
 ```
+
+**Note:** Llama 3 and Mistral work immediately. Add Claude models after use case approval.
 
 **Policy Name:** `BedrockInvokeModelPolicy`
 
@@ -150,17 +152,26 @@ You should see:
 
 ## Cost Estimation
 
-### Claude 3 Haiku (Default)
+### Meta Llama 3 70B (Current Default)
 
 | Usage | Input Tokens | Output Tokens | Cost per Generation |
 |-------|--------------|---------------|---------------------|
-| Simple form (5 fields) | 300 | 400 | $0.0006 |
-| Complex form (10 fields) | 500 | 800 | $0.0011 |
+| Simple form (5 fields) | 300 | 400 | $0.0007 |
+| Complex form (10 fields) | 500 | 800 | $0.0013 |
 
 **Monthly cost at 1000 users:**
 - 5 generations per user = 5,000 total
-- Average cost: $0.0008 per generation
-- **Total: ~$4/month** 🎉
+- Average cost: $0.001 per generation
+- **Total: ~$5/month** 🎉
+
+### Claude 3 Haiku (After Use Case Approval)
+
+| Usage | Cost per Generation |
+|-------|---------------------|
+| Simple form | $0.0006 |
+| Complex form | $0.0011 |
+
+**Monthly cost at 1000 users:** ~$4/month (20% cheaper than Llama)
 
 ### Claude 3.5 Sonnet (Premium)
 
@@ -233,12 +244,12 @@ LIMIT 30;
 
 ### Use Case Guide
 
-| Model | Best For | Speed | Cost | Quality |
-|-------|----------|-------|------|---------|
-| **Claude 3 Haiku** | Form generation, simple tasks | ⚡⚡⚡ | 💰 | ⭐⭐⭐ |
-| **Claude 3.5 Sonnet** | Complex forms, multilingual | ⚡⚡ | 💰💰💰 | ⭐⭐⭐⭐⭐ |
-| **Llama 3 70B** | Open source, cost-conscious | ⚡⚡ | 💰💰 | ⭐⭐⭐⭐ |
-| **Mistral Large** | GDPR compliance, European | ⚡⚡ | 💰💰💰 | ⭐⭐⭐⭐ |
+| Model | Best For | Speed | Cost | Quality | Approval |
+|-------|----------|-------|------|---------|----------|
+| **Llama 3 70B** ⭐ | Current default, open source | ⚡⚡ | 💰💰 | ⭐⭐⭐⭐ | ✅ Instant |
+| **Claude 3 Haiku** | Best cost/quality ratio | ⚡⚡⚡ | 💰 | ⭐⭐⭐⭐ | 📝 Use case |
+| **Claude 3.5 Sonnet** | Complex forms, multilingual | ⚡⚡ | 💰💰💰 | ⭐⭐⭐⭐⭐ | 📝 Use case |
+| **Mistral Large** | GDPR compliance, European | ⚡⚡ | 💰💰💰 | ⭐⭐⭐⭐ | ✅ Instant |
 
 ### Change Default Model
 
@@ -337,5 +348,99 @@ See `PRD-FORMBHARAT.md` for full specs.
 
 ---
 
+---
+
+## Appendix: Claude Model Use Case Template
+
+When you're ready to switch to Claude models (20% cheaper, faster), submit this use case in AWS Bedrock:
+
+### Use Case Submission
+
+**Go to:** AWS Console → Bedrock → Model access → Anthropic Claude 3 Haiku → "Request access"
+
+**Company/Organization Name:**
+```
+FormBharat (or your company name)
+```
+
+**Use Case Description:**
+```
+We are building FormBharat, an open-source form builder platform designed for Indian SMBs. 
+We need Claude models for the following AI features:
+
+1. AI Form Generator: Convert natural language descriptions into structured forms
+   - Input: "Customer feedback form for restaurant" 
+   - Output: Complete form with 5-10 relevant fields (name, email, ratings, feedback)
+   - Volume: ~5,000 requests/month
+   - Languages: English and Hindi
+
+2. Multilingual Translation (planned): Translate forms into 6 Indian languages
+   - Input: Form fields in English
+   - Output: Translated fields in Hindi, Tamil, Telugu, Marathi, Gujarati, Bengali
+   - Volume: ~2,000 requests/month
+
+3. Response Analysis (planned): Summarize text responses and extract insights
+   - Input: 50-100 customer feedback responses
+   - Output: Key themes, sentiment analysis, actionable insights
+   - Volume: ~1,000 requests/month
+
+We chose Claude for:
+- Superior multilingual support (critical for Indian languages)
+- Better JSON output formatting
+- Lower cost compared to GPT-4
+- Data stays in AWS (same infrastructure as our app)
+
+Current setup: Using Llama 3 70B temporarily while awaiting Claude approval.
+Target model: Claude 3 Haiku for production (cost-effective)
+```
+
+**Industry:**
+```
+Technology - SaaS/Software
+```
+
+**Expected Monthly Volume:**
+```
+10,000 - 50,000 requests/month
+```
+
+**Data Sensitivity:**
+```
+Low - No PII or sensitive data sent to models. 
+All user data is anonymized before processing.
+```
+
+**Compliance Requirements:**
+```
+DPDPA (India's data protection law) - data residency in ap-south-1 region
+```
+
+### Expected Timeline
+
+- **Submission:** 5 minutes
+- **AWS Review:** 1-3 business days
+- **Approval:** Usually granted within 24-48 hours
+- **Switch to Claude:** Update 1 line of code
+
+### After Approval
+
+1. Update `app/api/ai/generate-form/route.ts`:
+```typescript
+model: 'anthropic.claude-3-haiku-20240307-v1:0', // Change from Llama
+```
+
+2. Update cost calculation:
+```typescript
+const cost = calculateCost(
+  'anthropic.claude-3-haiku-20240307-v1:0',
+  usage.inputTokens,
+  usage.outputTokens
+)
+```
+
+3. Deploy and enjoy 20% cost savings! 🎉
+
+---
+
 **Last updated:** April 21, 2026  
-**Next review:** After multilingual translation implementation
+**Next review:** After Claude approval and multilingual translation implementation
