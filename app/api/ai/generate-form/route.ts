@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { invokeBedrock, calculateCost } from '@/lib/bedrock'
 import { createClient } from '@supabase/supabase-js'
 import { FieldType } from '@/lib/types'
+import { checkIPRateLimit, getClientIP } from '@/lib/rate-limit'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Rate limiting: 5 generations per user per day
-const RATE_LIMIT = 5
+// Rate limiting: Unlimited for authenticated users, 3 per IP for guests
+const USER_RATE_LIMIT = 999 // Effectively unlimited for verified users
+const GUEST_IP_LIMIT = 3
 const RATE_WINDOW = 24 * 60 * 60 * 1000 // 24 hours
 
 interface GenerateFormRequest {
@@ -45,7 +47,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
-    // 2. Check rate limit
+    // 2. Check rate limit for authenticated users (effectively unlimited after email verification)
     const { data: usageData } = await supabase
       .from('ai_usage')
       .select('*')
@@ -53,9 +55,9 @@ export async function POST(request: NextRequest) {
       .eq('feature', 'generate-form')
       .gte('created_at', new Date(Date.now() - RATE_WINDOW).toISOString())
 
-    if (usageData && usageData.length >= RATE_LIMIT) {
+    if (usageData && usageData.length >= USER_RATE_LIMIT) {
       return NextResponse.json(
-        { error: `Rate limit exceeded. You can generate ${RATE_LIMIT} forms per day.` },
+        { error: `Rate limit exceeded. You can generate ${USER_RATE_LIMIT} forms per day.` },
         { status: 429 }
       )
     }
@@ -175,7 +177,7 @@ JSON Schema:
       metadata: {
         tokensUsed: usage.inputTokens + usage.outputTokens,
         cost: cost.toFixed(4),
-        remainingGenerations: RATE_LIMIT - (usageData?.length || 0) - 1,
+        remainingGenerations: USER_RATE_LIMIT - (usageData?.length || 0) - 1,
       },
     })
   } catch (error: any) {

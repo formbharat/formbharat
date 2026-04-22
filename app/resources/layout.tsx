@@ -1,22 +1,26 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Resources - Guides & Best Practices for Indian Form Builders',
-  description: 'Free guides, tutorials, and best practices for online forms. Learn lead generation, WhatsApp marketing, survey design, and more — tailored for Indian businesses.',
-  keywords: ['form builder guide', 'online forms India', 'WhatsApp lead generation', 'survey best practices', 'form design', 'business forms India'],
+  title: 'Resources - AI Forms, Guides & Best Practices for Indian Businesses',
+  description: 'Free guides on AI form generation, lead generation, WhatsApp marketing, survey design, and data analytics — written for Indian businesses.',
+  keywords: [
+    'AI form generation guide', 'form builder guide India', 'online forms India',
+    'WhatsApp lead generation', 'survey best practices', 'form design tips',
+    'business forms India', 'AI form prompts', 'generate form with AI India',
+  ],
   alternates: {
     canonical: 'https://formbharat.com/resources',
   },
   openGraph: {
-    title: 'Resources — Guides & Best Practices for Indian Form Builders | FormBharat',
-    description: 'Free guides on lead generation, WhatsApp marketing, survey design, and data analytics — written for Indian businesses.',
+    title: 'Resources — AI Forms, Guides & Best Practices | FormBharat',
+    description: 'Free guides on AI form generation, lead generation, WhatsApp marketing, and survey design — written for Indian businesses.',
     url: 'https://formbharat.com/resources',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Resources | FormBharat',
-    description: 'Free guides on forms, lead generation, WhatsApp marketing, and more for Indian businesses.',
+    description: 'Free guides on AI forms, lead generation, WhatsApp marketing, and more for Indian businesses.',
   },
 }
 

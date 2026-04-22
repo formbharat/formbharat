@@ -1,3 +1,4 @@
+import { aiForms } from './ai-forms'
 import { leadGeneration } from './lead-generation'
 import { surveysFeedback } from './surveys-feedback'
 import { formDesign } from './form-design'
@@ -9,6 +10,7 @@ import type { Pillar, Article } from './types'
 export type { Pillar, Article }
 
 export const pillars: Pillar[] = [
+  aiForms,
   leadGeneration,
   surveysFeedback,
   formDesign,

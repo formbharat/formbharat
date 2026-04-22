@@ -3,6 +3,37 @@ import { prisma } from './prisma'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+// Generic email sending function
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string | string[]
+  subject: string
+  html: string
+}): Promise<void> {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('Email not configured: RESEND_API_KEY is missing')
+    throw new Error('Email service not configured')
+  }
+
+  // Use verified domain sender if configured, else Resend's sandbox sender
+  const fromAddress = process.env.RESEND_FROM_EMAIL || 'FormBharat <onboarding@resend.dev>'
+
+  const { data, error } = await resend.emails.send({
+    from: fromAddress,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+  })
+
+  if (error) {
+    console.error('Resend error:', error)
+    throw new Error(error.message || 'Failed to send email')
+  }
+}
+
 export async function sendFormNotification(
   formId: string,
   responseId: string,

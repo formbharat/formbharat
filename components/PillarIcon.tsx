@@ -1,4 +1,4 @@
-import { Target, BarChart2, Layers, Building2, MessageCircle, TrendingUp } from 'lucide-react'
+import { Target, BarChart2, Layers, Building2, MessageCircle, TrendingUp, Sparkles } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 interface PillarMeta {
@@ -8,6 +8,7 @@ interface PillarMeta {
 }
 
 const pillarIconMap: Record<string, PillarMeta> = {
+  'ai-form-generation':   { icon: Sparkles,      iconBg: 'bg-orange-100',  iconColor: 'text-orange-500'  },
   'lead-generation':      { icon: Target,        iconBg: 'bg-orange-100',  iconColor: 'text-orange-600'  },
   'surveys-feedback':     { icon: BarChart2,      iconBg: 'bg-blue-100',    iconColor: 'text-blue-600'    },
   'form-design':          { icon: Layers,         iconBg: 'bg-purple-100',  iconColor: 'text-purple-600'  },

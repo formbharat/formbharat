@@ -3,7 +3,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { pillars } from '@/lib/resources'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowRight, BookOpen, Clock } from 'lucide-react'
+import { ArrowRight, BookOpen, Clock, Sparkles } from 'lucide-react'
 import { PillarIcon } from '@/components/PillarIcon'
 import Script from 'next/script'
 
@@ -59,7 +59,7 @@ export default function ResourcesPage() {
             Learn How to Build Forms<br />That Actually Work
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
-            Practical guides on lead generation, WhatsApp marketing, survey design, and data analytics — written for Indian businesses.
+            Practical guides on AI form generation, lead generation, WhatsApp marketing, survey design, and data analytics — written for Indian businesses.
           </p>
           <p className="text-sm text-gray-500">
             {pillars.length} topic categories · {totalArticles} in-depth articles · Free forever
@@ -79,7 +79,14 @@ export default function ResourcesPage() {
               >
                 <Card className={`h-full border-2 transition-all duration-200 ${colorMap[pillar.color]} group-hover:shadow-md`}>
                   <CardHeader className="pb-3">
-                    <PillarIcon slug={pillar.slug} size="lg" className="mb-3" />
+                    <div className="flex items-center justify-between mb-3">
+                      <PillarIcon slug={pillar.slug} size="lg" />
+                      {pillar.slug === 'ai-form-generation' && (
+                        <span className="inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                          <Sparkles className="w-3 h-3" /> NEW
+                        </span>
+                      )}
+                    </div>
                     <CardTitle className="text-xl text-gray-900 group-hover:text-orange-600 transition-colors">
                       {pillar.title}
                     </CardTitle>

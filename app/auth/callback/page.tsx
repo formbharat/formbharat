@@ -38,8 +38,13 @@ function AuthCallbackContent() {
             },
           })
 
-          // Redirect to dashboard
-          router.push('/dashboard')
+          // If coming from AI form generation flow, redirect to builder
+          const aiDescription = localStorage.getItem('ai_form_description')
+          if (aiDescription) {
+            router.push('/builder?ai=generated&new=true')
+          } else {
+            router.push('/dashboard')
+          }
         } else {
           router.push('/auth/login')
         }

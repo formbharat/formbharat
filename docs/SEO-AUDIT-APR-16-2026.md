@@ -1,8 +1,8 @@
 # FormBharat SEO Audit & Implementation Log
 
-**Last updated:** April 16, 2026  
+**Last updated:** April 23, 2026  
 **Build Status:** ✅ Passing  
-**Overall SEO Score: 92/100** *(up from 52/100 on April 15)*
+**Overall SEO Score: 95/100** *(up from 92/100 on April 16)*
 
 > This is the canonical SEO document. Previous audit files (`SEO-AUDIT-REPORT.md`, `SEO-IMPLEMENTATION-SUMMARY.md`) are superseded.
 
@@ -10,15 +10,15 @@
 
 ## Executive Summary
 
-All critical SEO gaps have been resolved. The resources content section is live with 24 articles across 6 pillars, adding significant organic content surface area.
+AI feature showcase added across homepage, features page, and resources. New AI Form Generation pillar adds 3 articles and 3 new indexed URLs. SiteLinksSearchBox schema implemented. All AI-related keywords added to root, features, and resources metadata.
 
 **Score breakdown:**
 
 | Category | Score | Notes |
 |----------|-------|-------|
-| Technical SEO | 92/100 | Metadata, sitemap, robots, schema all complete |
-| On-Page SEO | 90/100 | All public pages have page-specific metadata |
-| Content SEO | 95/100 | 24 deep-content articles live |
+| Technical SEO | 95/100 | SiteLinksSearchBox schema added; all schemas updated with AI |
+| On-Page SEO | 95/100 | AI keywords in root, features, resources layouts |
+| Content SEO | 97/100 | 27 deep-content articles live (was 24); AI pillar added |
 | Local SEO | 85/100 | en-IN locale, India-first content strategy |
 
 ---
@@ -72,16 +72,17 @@ All critical SEO gaps have been resolved. The resources content section is live 
 
 ### Content Architecture (Resources)
 
-6 pillar topics × 4 articles = **24 total articles** — all statically pre-rendered (SSG).
+7 pillar topics × 3-4 articles = **27 total articles** — all statically pre-rendered (SSG).
 
-| Pillar | Slug |
-|--------|------|
-| 🎯 Lead Generation | `/resources/lead-generation` |
-| 📊 Surveys & Feedback | `/resources/surveys-feedback` |
-| 🎨 Form Design | `/resources/form-design` |
-| 🏢 Business Forms India | `/resources/business-forms-india` |
-| 💬 WhatsApp Forms | `/resources/whatsapp-forms` |
-| 📈 Form Analytics | `/resources/form-analytics` |
+| Pillar | Slug | Articles |
+|--------|------|----------|
+| ✨ AI Form Generation | `/resources/ai-form-generation` | 3 |
+| 🎯 Lead Generation | `/resources/lead-generation` | 4 |
+| 📊 Surveys & Feedback | `/resources/surveys-feedback` | 4 |
+| 🎨 Form Design | `/resources/form-design` | 4 |
+| 🏢 Business Forms India | `/resources/business-forms-india` | 4 |
+| 💬 WhatsApp Forms | `/resources/whatsapp-forms` | 4 |
+| 📈 Form Analytics | `/resources/form-analytics` | 4 |
 
 ### Navigation
 
@@ -90,19 +91,38 @@ All critical SEO gaps have been resolved. The resources content section is live 
 - Article pages: 3-column layout (left pillar nav, center content, right sticky TOC)
 - Breadcrumb bar: sticky below header on article pages
 - Prev/Next article navigation at bottom of each article
+- AI pillar card shows ✨ NEW badge on resources hub page
+
+### AI SEO (April 23, 2026)
+
+| Item | Where | Status |
+|------|-------|--------|
+| AI keywords in root layout | `app/layout.tsx` | ✅ |
+| AI in root title/description | `app/layout.tsx` | ✅ |
+| AI in WebApplication featureList schema | `app/layout.tsx` | ✅ |
+| SiteLinksSearchBox schema | `app/layout.tsx` | ✅ |
+| AI keywords in features layout | `app/features/layout.tsx` | ✅ |
+| AI in features title/description | `app/features/layout.tsx` | ✅ |
+| AI keywords in resources layout | `app/resources/layout.tsx` | ✅ |
+| AI pillar `generateMetadata` (auto) | `app/resources/[pillar]/layout.tsx` | ✅ |
+| AI article `generateMetadata` (auto) | `app/resources/[pillar]/[article]/layout.tsx` | ✅ |
+| AI URLs in sitemap (auto, dynamic) | `app/sitemap.ts` | ✅ |
+| AI Form Generation pillar (3 articles) | `lib/resources/ai-forms.ts` | ✅ |
+| PillarIcon for ai-form-generation | `components/PillarIcon.tsx` | ✅ |
 
 ---
 
 ## Open Items / Next Steps
 
-| Priority | Item |
-|----------|------|
-| Medium | Submit sitemap to Google Search Console |
-| Medium | Create `public/og-image.jpg` fallback for older crawlers |
-| Low | Review Core Web Vitals post-deployment |
-| Low | Add `SiteLinksSearchBox` schema to root layout |
-| Low | Internal linking — link from help articles to resources section |
+| Priority | Item | Notes |
+|----------|------|-------|
+| High | Submit updated sitemap to Google Search Console | 4 new AI URLs added |
+| Medium | Create `public/og-image.jpg` fallback for older crawlers | Still pending |
+| Medium | Internal linking — link from help articles to resources/AI section | Still pending |
+| Low | Review Core Web Vitals post-deployment | — |
+| Low | Add dedicated `/ai-form-generator` landing page | High-value SEO keyword page |
+| Low | Add AI prompt templates page `/templates/ai` | Long-tail keyword capture |
 
 ---
 
-**Audit last updated:** April 16, 2026
+**Audit last updated:** April 23, 2026

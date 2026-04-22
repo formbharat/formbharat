@@ -8,10 +8,21 @@ import {
   Zap, MessageSquare, BarChart3, Webhook, Mail, FileText,
   Layers, Share2, Download, Shield, Clock,
   Smartphone, Globe, Users, CheckCircle2, TrendingUp,
-  Lock, Database, Code2, ArrowRight, Check, X
+  Lock, Database, Code2, ArrowRight, Check, X, Sparkles, Wand2, Languages
 } from 'lucide-react'
 
 const featureGroups = [
+  {
+    label: 'AI-Powered',
+    icon: Sparkles,
+    bg: 'bg-orange-50',
+    color: 'text-orange-500',
+    items: [
+      { icon: Sparkles, name: 'AI Form Generator', desc: 'Describe your form in plain English. AI builds a complete form with the right fields in 10 seconds.', highlight: true },
+      { icon: Wand2, name: 'Smart Field Suggestions', desc: 'AI recommends relevant fields based on your industry and use case as you build.' },
+      { icon: Languages, name: 'Multilingual Generation', desc: 'Generate forms in Hindi, Tamil, Telugu, Marathi, Gujarati and Bengali with one click. (Coming soon)' },
+    ],
+  },
   {
     label: 'Form Building',
     icon: FileText,
@@ -83,6 +94,7 @@ const featureGroups = [
 ]
 
 const comparison = [
+  { name: 'AI Form Generator',      fb: true,  tf: false, gf: false, jf: false },
   { name: 'Unlimited Forms',       fb: true,  tf: false, gf: true,  jf: false },
   { name: 'Unlimited Responses',   fb: true,  tf: false, gf: true,  jf: false },
   { name: 'WhatsApp Sharing',      fb: true,  tf: false, gf: false, jf: false },
@@ -117,7 +129,7 @@ export default function FeaturesPage() {
             </span>
           </h1>
           <p className="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
-            Built for Indian businesses. All features free during early access — no credit card, no limits.
+            AI-powered form generation, WhatsApp sharing, and analytics — built for Indian businesses. All features free during early access.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/builder">

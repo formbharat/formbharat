@@ -10,11 +10,15 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   metadataBase: new URL('https://formbharat.com'),
   title: {
-    default: 'FormBharat - Free Form Builder for Indian Businesses',
+    default: 'FormBharat - Free AI Form Builder for Indian Businesses',
     template: '%s | FormBharat'
   },
-  description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration, Indian templates, and local support.',
-  keywords: ['form builder India', 'free forms', 'online surveys', 'WhatsApp forms', 'Indian form creator'],
+  description: 'Create beautiful forms in minutes or let AI build one in 10 seconds — free. Built for Indian businesses with WhatsApp integration, AI form generation, Indian templates, and local support.',
+  keywords: [
+    'form builder India', 'free form builder', 'AI form generator India', 'AI form builder',
+    'online surveys India', 'WhatsApp forms', 'Indian form creator', 'free forms online',
+    'create form with AI', 'generate form from description', 'form builder for SMB India',
+  ],
   authors: [{ name: 'FormBharat' }],
   creator: 'FormBharat',
   publisher: 'FormBharat',
@@ -27,13 +31,13 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: 'https://formbharat.com',
     siteName: 'FormBharat',
-    title: 'FormBharat - Free Form Builder for Indian Businesses',
-    description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration, Indian templates, and local support.',
+    title: 'FormBharat - Free AI Form Builder for Indian Businesses',
+    description: 'Create beautiful forms in minutes or let AI build one in 10 seconds — free. WhatsApp integration, Indian templates, and local support.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FormBharat - Free Form Builder for Indian Businesses',
-    description: 'Create beautiful forms, surveys, and quizzes for free. Built for Indian businesses with WhatsApp integration, Indian templates, and local support.',
+    title: 'FormBharat - Free AI Form Builder for Indian Businesses',
+    description: 'Create forms instantly or let AI build one in 10 seconds. Free, WhatsApp-ready, built for India.',
     creator: '@formbharat'
   },
   robots: {
@@ -109,6 +113,7 @@ export default function RootLayout({
                 description: 'Free for early access users',
               },
               featureList: [
+                'AI form generator — build a form from a text description in 10 seconds',
                 'Drag and drop form builder',
                 'WhatsApp integration',
                 'Indian templates',
@@ -122,6 +127,28 @@ export default function RootLayout({
                 '@type': 'AggregateRating',
                 ratingValue: '4.8',
                 ratingCount: '100',
+              },
+            }),
+          }}
+        />
+
+        {/* SiteLinksSearchBox Schema */}
+        <Script
+          id="sitelinks-search-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              url: 'https://formbharat.com',
+              name: 'FormBharat',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://formbharat.com/resources?q={search_term_string}',
+                },
+                'query-input': 'required name=search_term_string',
               },
             }),
           }}
