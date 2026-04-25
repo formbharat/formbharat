@@ -46,7 +46,13 @@ export default function SignupPage() {
       if (data.session) {
         localStorage.setItem('token', data.session.access_token)
       }
-      
+
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        ;(window as any).gtag('event', 'sign_up', {
+          method: 'email',
+        })
+      }
+
       toast({
         title: 'Success',
         description: 'Account created successfully',

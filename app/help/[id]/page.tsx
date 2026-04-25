@@ -1,12 +1,12 @@
-'use client'
-
-import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { ArrowLeft, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react'
+import { ArrowLeft, ThumbsUp, ThumbsDown, MessageSquare, ArrowRight } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import LiveChatButton from '@/components/LiveChatButton'
+import Script from 'next/script'
 
 const helpArticles: Record<string, any> = {
   'getting-started': {
@@ -468,52 +468,200 @@ Need help? [Contact Support](/contact) 🔗
   }
 }
 
-export default function HelpArticlePage() {
-  const params = useParams()
-  const article = helpArticles[params.id as string]
+// Related resources for internal linking
+const relatedResources = [
+  { href: '/resources/ai-form-generation', label: 'AI Form Generation Guide', desc: 'Build forms in 10 seconds with AI' },
+  { href: '/resources/lead-generation', label: 'Lead Generation with Forms', desc: 'Capture and convert more leads' },
+  { href: '/resources/whatsapp-forms', label: 'WhatsApp Forms Guide', desc: 'Share forms where your audience is' },
+  { href: '/resources/form-design', label: 'Form Design & Optimization', desc: 'Design forms people actually complete' },
+  { href: '/resources/form-analytics', label: 'Form Analytics Guide', desc: 'Measure, analyse, and improve' },
+]
 
-  if (!article) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
-          <Link href="/help">
-            <Button>Back to Help Center</Button>
-          </Link>
-        </div>
-      </div>
-    )
+const articleRelatedMap: Record<string, string[]> = {
+  'getting-started': ['ai-form-generation', 'lead-generation'],
+  'create-form': ['ai-form-generation', 'form-design'],
+  'use-templates': ['form-design', 'lead-generation'],
+  'whatsapp-share': ['whatsapp-forms', 'lead-generation'],
+  'collect-responses': ['form-analytics', 'lead-generation'],
+  'webhook-setup': ['form-analytics', 'lead-generation'],
+  'view-analytics': ['form-analytics', 'form-design'],
+  'export-data': ['form-analytics', 'surveys-feedback'],
+  'email-notifications': ['form-analytics', 'lead-generation'],
+  'multi-step-forms': ['form-design', 'lead-generation'],
+  'account-setup': ['ai-form-generation', 'form-design'],
+  'troubleshooting': ['form-design', 'form-analytics'],
+}
+
+export async function generateStaticParams() {
+  return Object.keys(helpArticles).map((id) => ({ id }))
+}
+
+// Proper markdown → HTML renderer (fixes broken unclosed-tag rendering)
+function renderMarkdown(content: string): string {
+  const lines = content.split('\n')
+  const out: string[] = []
+  let inUl = false
+  let inOl = false
+  let inCode = false
+
+  const closeList = () => {
+    if (inUl) { out.push('</ul>'); inUl = false }
+    if (inOl) { out.push('</ol>'); inOl = false }
   }
+
+  const inline = (t: string) =>
+    t
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono text-orange-600">$1</code>')
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-orange-600 underline hover:text-orange-700">$1</a>')
+
+  for (const rawLine of lines) {
+    const line = rawLine.trimEnd()
+
+    if (line.startsWith('```')) {
+      closeList()
+      if (!inCode) {
+        inCode = true
+        out.push(`<pre class="bg-gray-900 text-green-400 rounded-lg p-4 my-4 overflow-x-auto text-sm font-mono"><code>`)
+      } else {
+        inCode = false
+        out.push('</code></pre>')
+      }
+      continue
+    }
+    if (inCode) { out.push(line.replace(/</g, '&lt;').replace(/>/g, '&gt;')); continue }
+
+    const trimmed = line.trim()
+    if (!trimmed) { closeList(); continue }
+
+    if (trimmed.startsWith('### ')) {
+      closeList()
+      out.push(`<h3 class="text-xl font-semibold text-gray-900 mt-8 mb-3">${inline(trimmed.slice(4))}</h3>`)
+    } else if (trimmed.startsWith('## ')) {
+      closeList()
+      out.push(`<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4 border-b border-gray-100 pb-2">${inline(trimmed.slice(3))}</h2>`)
+    } else if (trimmed.startsWith('# ')) {
+      closeList()
+      out.push(`<h1 class="text-3xl font-bold text-gray-900 mb-6">${inline(trimmed.slice(2))}</h1>`)
+    } else if (/^\d+\.\s/.test(trimmed)) {
+      if (inUl) { out.push('</ul>'); inUl = false }
+      if (!inOl) { out.push('<ol class="list-decimal pl-6 my-3 space-y-1.5 text-gray-700">'); inOl = true }
+      out.push(`<li>${inline(trimmed.replace(/^\d+\.\s/, ''))}</li>`)
+    } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('\u2705')) {
+      if (inOl) { out.push('</ol>'); inOl = false }
+      if (!inUl) { out.push('<ul class="list-none pl-2 my-3 space-y-1.5 text-gray-700">'); inUl = true }
+      const item = trimmed.replace(/^[-*\u2705]\s*/, '')
+      const prefix = trimmed.startsWith('\u2705') ? '\u2705 ' : '\u2022 '
+      out.push(`<li class="flex gap-2"><span class="flex-shrink-0 mt-0.5">${prefix}</span><span>${inline(item)}</span></li>`)
+    } else if (trimmed.startsWith('---')) {
+      closeList()
+      out.push('<hr class="my-6 border-gray-200" />')
+    } else {
+      closeList()
+      out.push(`<p class="my-3 text-gray-700 leading-relaxed">${inline(trimmed)}</p>`)
+    }
+  }
+  closeList()
+  if (inCode) out.push('</code></pre>')
+  return out.join('\n')
+}
+
+export default async function HelpArticlePage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const article = helpArticles[id]
+
+  if (!article) notFound()
+
+  const url = `https://formbharat.com/help/${id}`
+  const relatedSlugs = articleRelatedMap[id] ?? []
+  const relatedLinks = relatedResources.filter((r) =>
+    relatedSlugs.some((s) => r.href.includes(s))
+  )
 
   return (
     <div className="min-h-screen bg-white">
+      <Script
+        id={`help-schema-${id}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TechArticle',
+            headline: article.title,
+            description: `Learn ${article.title.toLowerCase()} on FormBharat — India’s free AI form builder.`,
+            url,
+            author: { '@type': 'Organization', name: 'FormBharat', url: 'https://formbharat.com' },
+            publisher: { '@type': 'Organization', name: 'FormBharat', url: 'https://formbharat.com' },
+            dateModified: article.lastUpdated,
+            mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+            breadcrumb: {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://formbharat.com' },
+                { '@type': 'ListItem', position: 2, name: 'Help Center', item: 'https://formbharat.com/help' },
+                { '@type': 'ListItem', position: 3, name: article.title, item: url },
+              ],
+            },
+          }),
+        }}
+      />
+
       <Header />
 
-      {/* Back link */}
+      {/* Breadcrumb */}
       <div className="border-b bg-gray-50">
-        <div className="container mx-auto px-4 py-2">
-          <Link href="/help">
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 -ml-2">
-              <ArrowLeft className="mr-1.5 h-4 w-4" />
-              Back to Help Center
-            </Button>
-          </Link>
+        <div className="container mx-auto px-4 py-2 flex items-center gap-2 text-sm text-gray-500">
+          <Link href="/" className="hover:text-orange-600 transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/help" className="hover:text-orange-600 transition-colors">Help Center</Link>
+          <span>/</span>
+          <span className="text-gray-800 font-medium truncate">{article.title}</span>
         </div>
       </div>
 
       {/* Article */}
       <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <div className="mb-6">
+        <div className="mb-8">
           <span className="text-sm text-orange-600 font-medium">{article.category}</span>
-          <h1 className="text-4xl font-bold mt-2 mb-4">{article.title}</h1>
-          <p className="text-gray-600">Last updated: {article.lastUpdated}</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mt-2 mb-3 text-gray-900">{article.title}</h1>
+          <p className="text-sm text-gray-500">Last updated: {article.lastUpdated}</p>
         </div>
 
         <Card>
-          <CardContent className="p-8 prose prose-lg max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br/>').replace(/### /g, '<h3>').replace(/## /g, '<h2>').replace(/# /g, '<h1>') }} />
+          <CardContent className="p-6 sm:p-8">
+            <div
+              className="prose-custom"
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(article.content) }}
+            />
           </CardContent>
         </Card>
+
+        {/* Related Resources — internal linking */}
+        {relatedLinks.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Related Guides</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {relatedLinks.map((r) => (
+                <Link
+                  key={r.href}
+                  href={r.href}
+                  className="flex items-start gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all group"
+                >
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">{r.label}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{r.desc}</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500 flex-shrink-0 mt-0.5 transition-colors" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Feedback */}
         <div className="mt-12 text-center">
@@ -536,24 +684,14 @@ export default function HelpArticlePage() {
             <CardTitle>Still have questions?</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/contact" className="flex-1">
                 <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-500">
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Contact Support
                 </Button>
               </Link>
-              <Button 
-                variant="outline" 
-                className="flex-1"
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).Tawk_API) {
-                    (window as any).Tawk_API.maximize()
-                  }
-                }}
-              >
-                Start Live Chat
-              </Button>
+              <LiveChatButton className="flex-1">Start Live Chat</LiveChatButton>
             </div>
           </CardContent>
         </Card>

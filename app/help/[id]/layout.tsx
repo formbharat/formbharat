@@ -71,6 +71,7 @@ export async function generateMetadata({
   return {
     title: `${meta.title} | Help Center`,
     description: meta.description,
+    keywords: ['FormBharat', 'form builder India', ...meta.description.split(' ').filter((w) => w.length > 5).slice(0, 5)],
     alternates: { canonical: url },
     openGraph: {
       title: `${meta.title} | FormBharat Help`,

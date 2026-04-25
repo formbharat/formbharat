@@ -187,6 +187,14 @@ export function GuestAIGenerator({ open, onOpenChange, initialDescription = '' }
       // Store generated form in localStorage
       localStorage.setItem('ai_generated_form', JSON.stringify(generated))
 
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        ;(window as any).gtag('event', 'ai_form_generated', {
+          event_category: 'ai',
+          event_label: description.slice(0, 100),
+          value: 1,
+        })
+      }
+
       // Mark if user needs password setup (email users only, not Google)
       if (isEmailUser) {
         localStorage.setItem('needs_password', 'true')

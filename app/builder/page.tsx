@@ -172,7 +172,15 @@ function BuilderPageInner() {
       const savedForm = await saveResponse.json()
       setSavedFormId(savedForm.id)
       setIsNewForm(false)
-      
+
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        ;(window as any).gtag('event', 'form_saved', {
+          event_category: 'engagement',
+          event_label: data.title,
+          value: 1,
+        })
+      }
+
       toast({
         title: 'Success',
         description: 'Form saved successfully!',
