@@ -1,7 +1,7 @@
 'use client'
 
 import { FieldType } from '@/lib/types'
-import { Type, Mail, Phone, AlignLeft, List, Circle, CheckSquare, Upload, SeparatorHorizontal, AlignCenter, Image as ImageIcon, IndianRupee } from 'lucide-react'
+import { Type, Mail, Phone, AlignLeft, List, Circle, CheckSquare, Upload, SeparatorHorizontal, AlignCenter, Image as ImageIcon, IndianRupee, ShieldCheck } from 'lucide-react'
 
 interface FieldTypeSelectorProps {
   onSelectType: (type: FieldType) => void
@@ -20,6 +20,7 @@ const inputFields: { type: FieldType; label: string; icon: any; description: str
 
 const advancedFields: { type: FieldType; label: string; icon: any; description: string }[] = [
   { type: 'payment', label: 'Payment / UPI', icon: IndianRupee, description: 'Collect payment via Razorpay / UPI' },
+  { type: 'phone_otp', label: 'Phone OTP', icon: ShieldCheck, description: 'Verify Indian mobile via OTP (MSG91)' },
 ]
 
 const layoutFields: { type: FieldType; label: string; icon: any; description: string }[] = [

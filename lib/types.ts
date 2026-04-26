@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'email' | 'phone' | 'textarea' | 'dropdown' | 'radio' | 'checkbox' | 'file' | 'section' | 'heading' | 'image' | 'payment'
+export type FieldType = 'text' | 'email' | 'phone' | 'textarea' | 'dropdown' | 'radio' | 'checkbox' | 'file' | 'section' | 'heading' | 'image' | 'payment' | 'phone_otp'
 
 export type ConditionOperator = 'equals' | 'not_equals' | 'contains' | 'is_empty' | 'is_not_empty'
 

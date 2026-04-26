@@ -272,6 +272,42 @@ export function SortableField({ field, allFields, onUpdate, onDelete }: Sortable
     )
   }
 
+  if (field.type === 'phone_otp') {
+    return (
+      <div ref={setNodeRef} style={style}>
+        <Card className="p-4 border-blue-200 bg-blue-50/30">
+          <div className="flex gap-3">
+            <div {...attributes} {...listeners} className="flex items-center cursor-grab active:cursor-grabbing">
+              <GripVertical className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 uppercase tracking-wider">
+                <span>📱 Phone OTP Verification</span>
+              </div>
+              <Input
+                value={field.label}
+                onChange={(e) => onUpdate(field.id, { label: e.target.value })}
+                placeholder="Field label (e.g. Verify your mobile number)"
+              />
+              <Input
+                value={field.description || ''}
+                onChange={(e) => onUpdate(field.id, { description: e.target.value })}
+                placeholder="Helper text (optional)"
+                className="text-sm"
+              />
+              <p className="text-xs text-gray-500">Respondents must verify their Indian mobile (+91) before submitting. Powered by MSG91.</p>
+            </div>
+            <div className="flex items-start">
+              <Button variant="ghost" size="icon" onClick={() => onDelete(field.id)} className="text-destructive hover:text-destructive">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
   if (field.type === 'payment') {
     return (
       <div ref={setNodeRef} style={style}>

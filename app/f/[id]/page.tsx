@@ -24,6 +24,8 @@ export default function PublicFormPage() {
   const [formError, setFormError] = useState<string | null>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [paymentStatus, setPaymentStatus] = useState<Record<string, { paid: boolean; paymentId?: string; orderId?: string }>>({})
+  const [otpStatus, setOtpStatus] = useState<Record<string, { verified: boolean; phone?: string }>>({})
+  const [otpState, setOtpState] = useState<Record<string, { phone: string; sent: boolean; otp: string; sending: boolean; verifying: boolean; error: string }>>({})
 
   // Multi-step form state
   const [currentPage, setCurrentPage] = useState(0)
@@ -160,6 +162,21 @@ export default function PublicFormPage() {
           })
           return
         }
+      }
+    }
+
+    // Block submission if any visible phone_otp field is unverified
+    const visibleOtpFields = (fields as FormField[]).filter(
+      (f) => f.type === 'phone_otp' && shouldShowField(f, fields, formData)
+    )
+    for (const of_ of visibleOtpFields) {
+      if (!otpStatus[of_.id]?.verified) {
+        toast({
+          title: 'Phone verification required',
+          description: `Please verify your mobile number for "${of_.label}" before submitting.`,
+          variant: 'destructive',
+        })
+        return
       }
     }
 
@@ -380,6 +397,106 @@ export default function PublicFormPage() {
           </div>
         ) : null
       
+      case 'phone_otp': {
+        const status = otpStatus[field.id]
+        const state = otpState[field.id] || { phone: '', sent: false, otp: '', sending: false, verifying: false, error: '' }
+        const setState = (updates: Partial<typeof state>) =>
+          setOtpState((prev) => ({ ...prev, [field.id]: { ...state, ...updates } }))
+
+        if (status?.verified) {
+          return (
+            <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+              <ShieldCheck className="h-5 w-5 text-blue-600 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-blue-700">Mobile verified</p>
+                <p className="text-xs text-gray-500">+91-{status.phone}</p>
+              </div>
+            </div>
+          )
+        }
+
+        return (
+          <div className="border border-gray-200 rounded-xl p-4 bg-gray-50 space-y-3">
+            {field.description && <p className="text-xs text-gray-500">{field.description}</p>}
+            {!state.sent ? (
+              <div className="flex gap-2">
+                <div className="flex items-center border border-gray-200 rounded-lg bg-white px-3 text-sm text-gray-500 flex-shrink-0">
+                  +91
+                </div>
+                <input
+                  type="tel"
+                  maxLength={10}
+                  value={state.phone}
+                  onChange={(e) => setState({ phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                  placeholder="10-digit mobile number"
+                  className="flex-1 h-10 px-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-orange-400 focus:ring-1 focus:ring-orange-100 outline-none"
+                />
+                <button
+                  type="button"
+                  disabled={state.phone.length !== 10 || state.sending}
+                  onClick={async () => {
+                    setState({ sending: true, error: '' })
+                    const res = await fetch('/api/otp/send', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ phone: state.phone }),
+                    })
+                    const data = await res.json()
+                    if (res.ok) {
+                      setState({ sent: true, sending: false })
+                    } else {
+                      setState({ sending: false, error: data.error })
+                    }
+                  }}
+                  className="h-10 px-4 text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white rounded-lg disabled:opacity-40 transition-colors flex-shrink-0"
+                >
+                  {state.sending ? 'Sending…' : 'Send OTP'}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-xs text-gray-600">OTP sent to +91-{state.phone} · <button type="button" className="text-orange-600 underline" onClick={() => setState({ sent: false, otp: '', error: '' })}>Change number</button></p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={state.otp}
+                    onChange={(e) => setState({ otp: e.target.value.replace(/\D/g, '').slice(0, 6) })}
+                    placeholder="Enter 6-digit OTP"
+                    className="flex-1 h-10 px-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-orange-400 outline-none tracking-widest font-mono"
+                  />
+                  <button
+                    type="button"
+                    disabled={state.otp.length !== 6 || state.verifying}
+                    onClick={async () => {
+                      setState({ verifying: true, error: '' })
+                      const res = await fetch('/api/otp/verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phone: state.phone, otp: state.otp }),
+                      })
+                      const data = await res.json()
+                      if (res.ok) {
+                        setOtpStatus((prev) => ({ ...prev, [field.id]: { verified: true, phone: state.phone } }))
+                        handleFieldChange(field.id, `+91${state.phone}`)
+                        toast({ title: 'Mobile verified!', description: `+91-${state.phone} verified successfully.` })
+                      } else {
+                        setState({ verifying: false, error: data.error })
+                      }
+                    }}
+                    className="h-10 px-4 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-40 transition-colors"
+                  >
+                    {state.verifying ? 'Verifying…' : 'Verify'}
+                  </button>
+                </div>
+              </div>
+            )}
+            {state.error && <p className="text-xs text-red-500">{state.error}</p>}
+            <p className="text-xs text-gray-400">Powered by MSG91 · Valid for 10 minutes</p>
+          </div>
+        )
+      }
+
       case 'payment': {
         const status = paymentStatus[field.id]
         return (
