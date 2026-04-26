@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'email' | 'phone' | 'textarea' | 'dropdown' | 'radio' | 'checkbox' | 'file' | 'section' | 'heading' | 'image'
+export type FieldType = 'text' | 'email' | 'phone' | 'textarea' | 'dropdown' | 'radio' | 'checkbox' | 'file' | 'section' | 'heading' | 'image' | 'payment'
 
 export type ConditionOperator = 'equals' | 'not_equals' | 'contains' | 'is_empty' | 'is_not_empty'
 
@@ -17,6 +17,10 @@ export interface FormField {
   options?: string[]
   description?: string
   condition?: FieldCondition
+  // Payment field
+  paymentAmount?: number      // amount in INR (₹)
+  paymentCurrency?: string    // 'INR'
+  paymentDescription?: string // e.g. "Workshop registration fee"
 }
 
 export interface FormData {

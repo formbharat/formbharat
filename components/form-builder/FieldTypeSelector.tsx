@@ -1,7 +1,7 @@
 'use client'
 
 import { FieldType } from '@/lib/types'
-import { Type, Mail, Phone, AlignLeft, List, Circle, CheckSquare, Upload, SeparatorHorizontal, AlignCenter, Image as ImageIcon } from 'lucide-react'
+import { Type, Mail, Phone, AlignLeft, List, Circle, CheckSquare, Upload, SeparatorHorizontal, AlignCenter, Image as ImageIcon, IndianRupee } from 'lucide-react'
 
 interface FieldTypeSelectorProps {
   onSelectType: (type: FieldType) => void
@@ -16,6 +16,10 @@ const inputFields: { type: FieldType; label: string; icon: any; description: str
   { type: 'radio', label: 'Multiple Choice', icon: Circle, description: 'Pick one option' },
   { type: 'checkbox', label: 'Checkboxes', icon: CheckSquare, description: 'Pick many options' },
   { type: 'file', label: 'File Upload', icon: Upload, description: 'Upload files/images' },
+]
+
+const advancedFields: { type: FieldType; label: string; icon: any; description: string }[] = [
+  { type: 'payment', label: 'Payment / UPI', icon: IndianRupee, description: 'Collect payment via Razorpay / UPI' },
 ]
 
 const layoutFields: { type: FieldType; label: string; icon: any; description: string }[] = [
@@ -58,6 +62,14 @@ export function FieldTypeSelector({ onSelectType }: FieldTypeSelectorProps) {
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Layout</p>
         <div className="space-y-1.5">
           {layoutFields.map((f) => (
+            <FieldButton key={f.type} {...f} onSelectType={onSelectType} />
+          ))}
+        </div>
+      </div>
+      <div className="border-t border-gray-100 pt-4">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Advanced</p>
+        <div className="space-y-1.5">
+          {advancedFields.map((f) => (
             <FieldButton key={f.type} {...f} onSelectType={onSelectType} />
           ))}
         </div>

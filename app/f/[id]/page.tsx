@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast'
 import { FormField } from '@/lib/types'
 import { shouldShowField } from '@/lib/conditional-logic'
-import { Loader2, CheckCircle2, Share2 } from 'lucide-react'
+import { Loader2, CheckCircle2, Share2, IndianRupee, ShieldCheck } from 'lucide-react'
 
 export default function PublicFormPage() {
   const params = useParams()
@@ -23,7 +23,8 @@ export default function PublicFormPage() {
   const [submitted, setSubmitted] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
-  
+  const [paymentStatus, setPaymentStatus] = useState<Record<string, { paid: boolean; paymentId?: string; orderId?: string }>>({})
+
   // Multi-step form state
   const [currentPage, setCurrentPage] = useState(0)
   const [startTime] = useState(new Date())
@@ -32,6 +33,17 @@ export default function PublicFormPage() {
   useEffect(() => {
     fetchForm()
   }, [])
+
+  useEffect(() => {
+    if (!form) return
+    const hasPayment = (form.fields as FormField[]).some((f) => f.type === 'payment')
+    if (!hasPayment) return
+    if (document.querySelector('script[src*="razorpay"]')) return
+    const script = document.createElement('script')
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    script.async = true
+    document.body.appendChild(script)
+  }, [form])
 
   const fetchForm = async () => {
     try {
@@ -47,6 +59,63 @@ export default function PublicFormPage() {
       })
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handlePayment = async (field: FormField) => {
+    if (!field.paymentAmount) {
+      toast({ title: 'Payment not configured', description: 'Amount is not set for this field.', variant: 'destructive' })
+      return
+    }
+    try {
+      const res = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: field.paymentAmount,
+          currency: field.paymentCurrency || 'INR',
+          formId: form.id,
+          fieldId: field.id,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast({ title: 'Payment error', description: data.error, variant: 'destructive' })
+        return
+      }
+      const { orderId, amount, currency, keyId } = data
+      const rzp = new (window as any).Razorpay({
+        key: keyId,
+        amount,
+        currency,
+        order_id: orderId,
+        name: form.title,
+        description: field.paymentDescription || field.label,
+        theme: { color: '#f97316' },
+        handler: async (response: any) => {
+          const verifyRes = await fetch('/api/payment/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          })
+          if (verifyRes.ok) {
+            const { paymentId } = await verifyRes.json()
+            setPaymentStatus((prev) => ({ ...prev, [field.id]: { paid: true, paymentId, orderId } }))
+            handleFieldChange(field.id, JSON.stringify({ paid: true, paymentId, orderId }))
+            toast({ title: 'Payment successful!', description: `Payment ID: ${paymentId}` })
+          } else {
+            toast({ title: 'Payment verification failed', description: 'Please try again.', variant: 'destructive' })
+          }
+        },
+        modal: { ondismiss: () => toast({ title: 'Payment cancelled' }) },
+      })
+      rzp.open()
+    } catch {
+      toast({ title: 'Payment failed', description: 'Please try again.', variant: 'destructive' })
     }
   }
 
@@ -91,6 +160,21 @@ export default function PublicFormPage() {
           })
           return
         }
+      }
+    }
+
+    // Block submission if any visible payment field is unpaid
+    const visiblePaymentFields = (fields as FormField[]).filter(
+      (f) => f.type === 'payment' && shouldShowField(f, fields, formData)
+    )
+    for (const pf of visiblePaymentFields) {
+      if (!paymentStatus[pf.id]?.paid) {
+        toast({
+          title: 'Payment required',
+          description: `Please complete the payment for "${pf.label}" before submitting.`,
+          variant: 'destructive',
+        })
+        return
       }
     }
 
@@ -155,6 +239,9 @@ export default function PublicFormPage() {
   const handleFieldChange = (fieldId: string, value: any) => {
     setFormData(prev => ({ ...prev, [fieldId]: value }))
   }
+
+  const getVisibleFields = (fields: FormField[]) =>
+    fields.filter((f) => shouldShowField(f, fields, formData))
 
   const handleShareWhatsApp = () => {
     const link = window.location.href
@@ -293,6 +380,36 @@ export default function PublicFormPage() {
           </div>
         ) : null
       
+      case 'payment': {
+        const status = paymentStatus[field.id]
+        return (
+          <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+            {field.paymentDescription && (
+              <p className="text-sm text-gray-600 mb-3">{field.paymentDescription}</p>
+            )}
+            {status?.paid ? (
+              <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <ShieldCheck className="h-5 w-5 text-green-600 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-green-700">Payment successful</p>
+                  <p className="text-xs text-gray-500">ID: {status.paymentId}</p>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handlePayment(field)}
+                className="w-full flex items-center justify-center gap-2 h-11 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold text-sm transition-colors"
+              >
+                <IndianRupee className="h-4 w-4" />
+                Pay ₹{field.paymentAmount?.toLocaleString('en-IN')} via UPI / Card
+              </button>
+            )}
+            <p className="mt-2 text-xs text-gray-400 text-center">Secured by Razorpay</p>
+          </div>
+        )
+      }
+
       default:
         return null
     }

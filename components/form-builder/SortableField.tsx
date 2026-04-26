@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { FormField, ConditionOperator } from '@/lib/types'
 import { Textarea } from '@/components/ui/textarea'
-import { GripVertical, Trash2, Plus, X, Image as ImageIcon, AlignCenter, SeparatorHorizontal, Upload, Loader2, Link as LinkIcon } from 'lucide-react'
+import { GripVertical, Trash2, Plus, X, Image as ImageIcon, AlignCenter, SeparatorHorizontal, Upload, Loader2, Link as LinkIcon, IndianRupee } from 'lucide-react'
 import { useState, useRef } from 'react'
 
 const OPERATORS: { value: ConditionOperator; label: string; needsValue: boolean }[] = [
@@ -260,6 +260,53 @@ export function SortableField({ field, allFields, onUpdate, onDelete }: Sortable
                 placeholder="Caption (optional)"
                 className="text-sm"
               />
+            </div>
+            <div className="flex items-start">
+              <Button variant="ghost" size="icon" onClick={() => onDelete(field.id)} className="text-destructive hover:text-destructive">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  if (field.type === 'payment') {
+    return (
+      <div ref={setNodeRef} style={style}>
+        <Card className="p-4 border-green-200 bg-green-50/30">
+          <div className="flex gap-3">
+            <div {...attributes} {...listeners} className="flex items-center cursor-grab active:cursor-grabbing">
+              <GripVertical className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-green-600 uppercase tracking-wider">
+                <IndianRupee className="h-3.5 w-3.5" /> Payment / UPI
+              </div>
+              <Input
+                value={field.label}
+                onChange={(e) => onUpdate(field.id, { label: e.target.value })}
+                placeholder="Payment field label (e.g. Workshop Registration Fee)"
+              />
+              <div className="flex gap-2 items-center">
+                <span className="text-sm font-medium text-gray-700 w-8">₹</span>
+                <Input
+                  type="number"
+                  min={1}
+                  value={field.paymentAmount ?? ''}
+                  onChange={(e) => onUpdate(field.id, { paymentAmount: Number(e.target.value) })}
+                  placeholder="Amount in INR (e.g. 499)"
+                  className="flex-1"
+                />
+              </div>
+              <Input
+                value={field.paymentDescription || ''}
+                onChange={(e) => onUpdate(field.id, { paymentDescription: e.target.value })}
+                placeholder="Payment description shown to respondent (optional)"
+                className="text-sm"
+              />
+              <p className="text-xs text-gray-500">Powered by Razorpay · Accepts UPI, cards, netbanking</p>
             </div>
             <div className="flex items-start">
               <Button variant="ghost" size="icon" onClick={() => onDelete(field.id)} className="text-destructive hover:text-destructive">
