@@ -7,7 +7,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { Copy, ExternalLink, Eye, Trash2, Plus, BarChart3, FileText, Users, TrendingUp, MoreVertical, Edit, Share2, CopyPlus, LineChart, Settings, LogOut, Sparkles } from 'lucide-react'
+import { Copy, ExternalLink, Eye, Trash2, Plus, BarChart3, FileText, Users, TrendingUp, MoreVertical, Edit, Share2, CopyPlus, LineChart, Settings, LogOut, Sparkles, Wand2, X } from 'lucide-react'
 import { AIFormGenerator } from '@/components/AIFormGenerator'
 
 function DashboardContent() {
@@ -16,6 +16,7 @@ function DashboardContent() {
   const [forms, setForms] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showAIGenerator, setShowAIGenerator] = useState(false)
+  const [showAIBanner, setShowAIBanner] = useState(true)
 
   useEffect(() => {
     fetchForms()
@@ -247,6 +248,40 @@ function DashboardContent() {
           </Card>
         </div>
 
+        {/* AI Banner — shown when user has forms */}
+        {forms.length > 0 && showAIBanner && (
+          <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 p-[1px]">
+            <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl bg-gradient-to-r from-purple-50 via-pink-50 to-orange-50 px-5 py-4">
+              <div className="flex items-center gap-4">
+                <div className="hidden sm:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+                  <Wand2 className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Create forms 10x faster with AI</p>
+                  <p className="text-sm text-gray-600">Describe your form in plain English — AI builds it in seconds</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Button
+                  onClick={() => setShowAIGenerator(true)}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                  size="sm"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Try AI Generator
+                </Button>
+                <button
+                  onClick={() => setShowAIBanner(false)}
+                  className="text-gray-400 hover:text-gray-600 p-1 rounded"
+                  aria-label="Dismiss"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Forms List */}
         <div className="mb-4 flex justify-between items-center">
           <h2 className="text-xl md:text-2xl font-bold">Your Forms</h2>
@@ -268,30 +303,60 @@ function DashboardContent() {
             </CardContent>
           </Card>
         ) : forms.length === 0 ? (
-          <Card className="border-2 border-dashed">
-            <CardContent className="py-12 md:py-16 text-center px-4">
-              <div className="w-12 md:w-16 h-12 md:h-16 bg-gradient-to-br from-orange-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FileText className="h-6 md:h-8 w-6 md:w-8 text-orange-500" />
-              </div>
-              <h3 className="text-lg md:text-xl font-semibold mb-2">No forms yet</h3>
-              <p className="text-sm md:text-base text-gray-600 mb-6 max-w-md mx-auto">
-                Get started by creating your first form. It only takes a few minutes!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/builder" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Your First Form
-                  </Button>
-                </Link>
-                <Link href="/templates" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full sm:w-auto">
-                    Browse Templates
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            {/* AI Hero Card */}
+            <Card className="border-0 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 text-white overflow-hidden">
+              <CardContent className="py-10 md:py-12 text-center px-6 relative">
+                <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '40px 40px'}} />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Wand2 className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold mb-2">Create your first form with AI</h3>
+                  <p className="text-white/80 mb-6 max-w-sm mx-auto text-sm md:text-base">
+                    Just describe what you need in plain English — AI creates a complete form in seconds
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Button
+                      onClick={() => setShowAIGenerator(true)}
+                      className="bg-white text-purple-700 hover:bg-white/90 font-semibold"
+                    >
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Generate with AI
+                    </Button>
+                    <Link href="/builder" className="w-full sm:w-auto">
+                      <Button variant="outline" className="w-full sm:w-auto border-white/40 text-white hover:bg-white/10">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Start from Scratch
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Secondary options */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Link href="/templates">
+                <Card className="border-dashed hover:border-orange-300 hover:bg-orange-50 transition-colors cursor-pointer h-full">
+                  <CardContent className="py-6 text-center">
+                    <FileText className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+                    <p className="font-medium text-gray-900">Browse Templates</p>
+                    <p className="text-xs text-gray-500 mt-1">12+ industry-specific templates</p>
+                  </CardContent>
+                </Card>
+              </Link>
+              <Link href="/builder">
+                <Card className="border-dashed hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer h-full">
+                  <CardContent className="py-6 text-center">
+                    <Plus className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="font-medium text-gray-900">Blank Form</p>
+                    <p className="text-xs text-gray-500 mt-1">Build from scratch, your way</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          </div>
         ) : (
           <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {forms.map((form) => (
