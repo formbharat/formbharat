@@ -25,7 +25,7 @@ export default function PublicFormPage() {
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [paymentStatus, setPaymentStatus] = useState<Record<string, { paid: boolean; paymentId?: string; orderId?: string }>>({})
   const [otpStatus, setOtpStatus] = useState<Record<string, { verified: boolean; phone?: string }>>({})
-  const [otpState, setOtpState] = useState<Record<string, { phone: string; sent: boolean; otp: string; sending: boolean; verifying: boolean; error: string }>>({})
+  const [otpState, setOtpState] = useState<Record<string, { phone: string; sent: boolean; otp: string; sending: boolean; verifying: boolean; error: string; confirmationResult: any }>>({})
 
   // Multi-step form state
   const [currentPage, setCurrentPage] = useState(0)
@@ -399,9 +399,11 @@ export default function PublicFormPage() {
       
       case 'phone_otp': {
         const status = otpStatus[field.id]
-        const state = otpState[field.id] || { phone: '', sent: false, otp: '', sending: false, verifying: false, error: '' }
+        const state = otpState[field.id] || { phone: '', sent: false, otp: '', sending: false, verifying: false, error: '', confirmationResult: null }
         const setState = (updates: Partial<typeof state>) =>
           setOtpState((prev) => ({ ...prev, [field.id]: { ...state, ...updates } }))
+        const useFirebase = !!(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+        const btnId = `otp-send-${field.id}`
 
         if (status?.verified) {
           return (
@@ -413,6 +415,65 @@ export default function PublicFormPage() {
               </div>
             </div>
           )
+        }
+
+        const handleSendOtp = async () => {
+          setState({ sending: true, error: '' })
+          try {
+            if (useFirebase) {
+              const { signInWithPhoneNumber, RecaptchaVerifier } = await import('firebase/auth')
+              const { firebaseAuth } = await import('@/lib/firebase-client')
+              const existing = (window as any)[`_rzv_${field.id}`]
+              if (existing) { try { existing.clear() } catch {} }
+              const verifier = new RecaptchaVerifier(firebaseAuth, btnId, { size: 'invisible' })
+              ;(window as any)[`_rzv_${field.id}`] = verifier
+              const result = await signInWithPhoneNumber(firebaseAuth, `+91${state.phone}`, verifier)
+              setState({ sent: true, sending: false, confirmationResult: result })
+            } else {
+              const res = await fetch('/api/otp/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: state.phone }),
+              })
+              const data = await res.json()
+              if (res.ok) setState({ sent: true, sending: false })
+              else setState({ sending: false, error: data.error })
+            }
+          } catch (err: any) {
+            setState({ sending: false, error: err?.message || 'Failed to send OTP' })
+          }
+        }
+
+        const handleVerifyOtp = async () => {
+          setState({ verifying: true, error: '' })
+          try {
+            let verifiedPhone = state.phone
+            if (useFirebase && state.confirmationResult) {
+              const result = await state.confirmationResult.confirm(state.otp)
+              const idToken = await result.user.getIdToken()
+              const res = await fetch('/api/otp/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken }),
+              })
+              const data = await res.json()
+              if (!res.ok) { setState({ verifying: false, error: data.error }); return }
+              verifiedPhone = data.phone
+            } else {
+              const res = await fetch('/api/otp/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: state.phone, otp: state.otp }),
+              })
+              const data = await res.json()
+              if (!res.ok) { setState({ verifying: false, error: data.error }); return }
+            }
+            setOtpStatus((prev) => ({ ...prev, [field.id]: { verified: true, phone: verifiedPhone } }))
+            handleFieldChange(field.id, `+91${verifiedPhone}`)
+            toast({ title: 'Mobile verified!', description: `+91-${verifiedPhone} verified.` })
+          } catch (err: any) {
+            setState({ verifying: false, error: err?.message || 'Verification failed' })
+          }
         }
 
         return (
@@ -432,22 +493,10 @@ export default function PublicFormPage() {
                   className="flex-1 h-10 px-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-orange-400 focus:ring-1 focus:ring-orange-100 outline-none"
                 />
                 <button
+                  id={btnId}
                   type="button"
                   disabled={state.phone.length !== 10 || state.sending}
-                  onClick={async () => {
-                    setState({ sending: true, error: '' })
-                    const res = await fetch('/api/otp/send', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ phone: state.phone }),
-                    })
-                    const data = await res.json()
-                    if (res.ok) {
-                      setState({ sent: true, sending: false })
-                    } else {
-                      setState({ sending: false, error: data.error })
-                    }
-                  }}
+                  onClick={handleSendOtp}
                   className="h-10 px-4 text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white rounded-lg disabled:opacity-40 transition-colors flex-shrink-0"
                 >
                   {state.sending ? 'Sending…' : 'Send OTP'}
@@ -455,7 +504,9 @@ export default function PublicFormPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                <p className="text-xs text-gray-600">OTP sent to +91-{state.phone} · <button type="button" className="text-orange-600 underline" onClick={() => setState({ sent: false, otp: '', error: '' })}>Change number</button></p>
+                <p className="text-xs text-gray-600">OTP sent to +91-{state.phone} ·{' '}
+                  <button type="button" className="text-orange-600 underline" onClick={() => setState({ sent: false, otp: '', error: '', confirmationResult: null })}>Change number</button>
+                </p>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -468,22 +519,7 @@ export default function PublicFormPage() {
                   <button
                     type="button"
                     disabled={state.otp.length !== 6 || state.verifying}
-                    onClick={async () => {
-                      setState({ verifying: true, error: '' })
-                      const res = await fetch('/api/otp/verify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone: state.phone, otp: state.otp }),
-                      })
-                      const data = await res.json()
-                      if (res.ok) {
-                        setOtpStatus((prev) => ({ ...prev, [field.id]: { verified: true, phone: state.phone } }))
-                        handleFieldChange(field.id, `+91${state.phone}`)
-                        toast({ title: 'Mobile verified!', description: `+91-${state.phone} verified successfully.` })
-                      } else {
-                        setState({ verifying: false, error: data.error })
-                      }
-                    }}
+                    onClick={handleVerifyOtp}
                     className="h-10 px-4 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-40 transition-colors"
                   >
                     {state.verifying ? 'Verifying…' : 'Verify'}
@@ -492,7 +528,7 @@ export default function PublicFormPage() {
               </div>
             )}
             {state.error && <p className="text-xs text-red-500">{state.error}</p>}
-            <p className="text-xs text-gray-400">Powered by MSG91 · Valid for 10 minutes</p>
+            <p className="text-xs text-gray-400">{useFirebase ? 'Powered by Firebase · 10,000 free/month' : '[Dev mode] OTP logged to server console'}</p>
           </div>
         )
       }

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { otpStore } from '@/lib/otp-store'
 
+// Production: Firebase Phone Auth sends OTP entirely client-side (no server call needed).
+// This endpoint is only used in dev mode (no Firebase env vars configured).
+
 export async function POST(request: NextRequest) {
   try {
     const { phone } = await request.json()
@@ -12,37 +15,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const authKey = process.env.MSG91_AUTH_KEY
-    const templateId = process.env.MSG91_OTP_TEMPLATE_ID
+    const isFirebaseConfigured = !!(
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+      process.env.FIREBASE_PROJECT_ID
+    )
 
-    if (authKey && templateId) {
-      // Production: MSG91 OTP API (manages OTP generation, storage & expiry)
-      const res = await fetch('https://control.msg91.com/api/v5/otp', {
-        method: 'POST',
-        headers: {
-          authkey: authKey,
-          'Content-Type': 'application/JSON',
-        },
-        body: JSON.stringify({
-          template_id: templateId,
-          mobile: `91${phone}`,
-          otp_expiry: 10,
-          otp_length: 6,
-        }),
-      })
-      const data = await res.json()
-      if (data.type !== 'success') {
-        console.error('MSG91 error:', data)
-        return NextResponse.json({ error: 'Failed to send OTP. Please try again.' }, { status: 502 })
-      }
-    } else {
-      // Dev mode: generate OTP, store in shared store, log to server console
-      const otp = Math.floor(100000 + Math.random() * 900000).toString()
-      otpStore.set(`phone:${phone}`, { otp, expiresAt: Date.now() + 10 * 60 * 1000 })
-      console.log(`\n[DEV MODE] OTP for +91-${phone}: ${otp}\n`)
+    if (isFirebaseConfigured) {
+      // Firebase handles sending client-side; this route should not be called in production
+      return NextResponse.json({ success: true, mode: 'firebase' })
     }
 
-    return NextResponse.json({ success: true })
+    // Dev mode: generate OTP locally, log to server console
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    otpStore.set(`phone:${phone}`, { otp, expiresAt: Date.now() + 10 * 60 * 1000 })
+    console.log(`\n[DEV MODE] OTP for +91-${phone}: ${otp}\n`)
+
+    return NextResponse.json({ success: true, mode: 'dev' })
   } catch (error) {
     console.error('OTP send error:', error)
     return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 })
