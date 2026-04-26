@@ -24,6 +24,9 @@ export async function PUT(
       multiStepEnabled,
       successMessage,
       redirectUrl,
+      opensAt,
+      closesAt,
+      maxResponses,
     } = await request.json()
 
     // Verify form ownership
@@ -49,6 +52,9 @@ export async function PUT(
         ...(multiStepEnabled !== undefined && { multiStepEnabled }),
         ...(successMessage !== undefined && { successMessage }),
         ...(redirectUrl !== undefined && { redirectUrl }),
+        ...(opensAt !== undefined && { opensAt: opensAt ? new Date(opensAt) : null }),
+        ...(closesAt !== undefined && { closesAt: closesAt ? new Date(closesAt) : null }),
+        ...(maxResponses !== undefined && { maxResponses: maxResponses ? Number(maxResponses) : null }),
       }
     })
 

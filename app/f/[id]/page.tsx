@@ -21,6 +21,7 @@ export default function PublicFormPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
   
   // Multi-step form state
@@ -107,7 +108,12 @@ export default function PublicFormPage() {
         body: JSON.stringify(submissionData),
       })
 
-      if (!response.ok) throw new Error('Submission failed')
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}))
+        const msg = errData?.error || 'Submission failed'
+        setFormError(msg)
+        return
+      }
 
       if (form.redirectUrl) {
         window.location.href = form.redirectUrl
@@ -128,6 +134,14 @@ export default function PublicFormPage() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  const getScheduleStatus = (): string | null => {
+    if (!form) return null
+    const now = new Date()
+    if (form.opensAt && now < new Date(form.opensAt)) return `This form opens on ${new Date(form.opensAt).toLocaleString()}.`
+    if (form.closesAt && now > new Date(form.closesAt)) return 'This form has closed and is no longer accepting responses.'
+    return null
   }
 
   const getPages = (fields: FormField[]) => {
@@ -339,6 +353,25 @@ export default function PublicFormPage() {
     )
   }
 
+  if (formError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center p-4">
+        <Card className="max-w-md w-full">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">⏸️</span>
+            </div>
+            <CardTitle className="text-xl">Form Unavailable</CardTitle>
+            <CardDescription>{formError}</CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Link href="/"><Button variant="outline" size="sm">Go to Homepage</Button></Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 md:py-12 px-3 md:px-4">
       <div className="max-w-2xl mx-auto">
@@ -360,6 +393,13 @@ export default function PublicFormPage() {
             Share via WhatsApp
           </button>
         </div>
+
+        {/* Schedule status banner */}
+        {getScheduleStatus() && (
+          <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-700 text-center">
+            {getScheduleStatus()}
+          </div>
+        )}
 
         {/* Form Card */}
         <Card className="shadow-xl">

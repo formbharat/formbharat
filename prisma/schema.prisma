@@ -37,6 +37,9 @@ model Form {
   emailTemplate             String?
   successMessage            String?
   redirectUrl               String?
+  opensAt                   DateTime?
+  closesAt                  DateTime?
+  maxResponses              Int?
   user                      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   responses                 Response[]
   webhookLogs               WebhookLog[]

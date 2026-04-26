@@ -32,6 +32,24 @@ export async function POST(
     const { id } = await params
     const data = await request.json()
 
+    // Enforce scheduling and response limits (cast because new fields pending migration)
+    const scheduleCheck = await (prisma as any).form.findUnique({
+      where: { id },
+      select: { opensAt: true, closesAt: true, maxResponses: true, _count: { select: { responses: true } } },
+    })
+    if (scheduleCheck) {
+      const now = new Date()
+      if (scheduleCheck.opensAt && now < new Date(scheduleCheck.opensAt)) {
+        return NextResponse.json({ error: 'This form is not open yet.' }, { status: 403 })
+      }
+      if (scheduleCheck.closesAt && now > new Date(scheduleCheck.closesAt)) {
+        return NextResponse.json({ error: 'This form has closed.' }, { status: 403 })
+      }
+      if (scheduleCheck.maxResponses && scheduleCheck._count.responses >= scheduleCheck.maxResponses) {
+        return NextResponse.json({ error: 'This form has reached its maximum number of responses.' }, { status: 403 })
+      }
+    }
+
     // Create response with tracking data
     const startedAt = data._startedAt ? new Date(data._startedAt) : null
     const completedAt = new Date()

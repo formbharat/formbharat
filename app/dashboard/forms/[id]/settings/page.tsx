@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
-import { ArrowLeft, Bell, Webhook, Zap, Send, Code, Copy, CheckCircle2, XCircle, Clock, Download, QrCode, CornerDownRight } from 'lucide-react'
+import { ArrowLeft, Bell, Webhook, Zap, Send, Code, Copy, CheckCircle2, XCircle, Clock, Download, QrCode, CornerDownRight, CalendarClock } from 'lucide-react'
 import QRCode from 'qrcode'
 
 function FormSettingsContent() {
@@ -51,6 +51,11 @@ function FormSettingsContent() {
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [qrLoading, setQrLoading] = useState(false)
 
+  // Scheduling
+  const [opensAt, setOpensAt] = useState('')
+  const [closesAt, setClosesAt] = useState('')
+  const [maxResponses, setMaxResponses] = useState('')
+
   useEffect(() => {
     fetchForm()
   }, [])
@@ -72,6 +77,9 @@ function FormSettingsContent() {
       setMultiStepEnabled(data.multiStepEnabled || false)
       setSuccessMessage(data.successMessage || '')
       setRedirectUrl(data.redirectUrl || '')
+      setOpensAt(data.opensAt ? new Date(data.opensAt).toISOString().slice(0, 16) : '')
+      setClosesAt(data.closesAt ? new Date(data.closesAt).toISOString().slice(0, 16) : '')
+      setMaxResponses(data.maxResponses ? String(data.maxResponses) : '')
     } catch (error) {
       console.error('Error fetching form:', error)
     } finally {
@@ -192,6 +200,9 @@ function FormSettingsContent() {
           multiStepEnabled,
           successMessage: successMessage.trim() || null,
           redirectUrl: redirectUrl.trim() || null,
+          opensAt: opensAt ? new Date(opensAt).toISOString() : null,
+          closesAt: closesAt ? new Date(closesAt).toISOString() : null,
+          maxResponses: maxResponses ? parseInt(maxResponses, 10) : null,
         }),
       })
 
@@ -417,6 +428,60 @@ function FormSettingsContent() {
                   </p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Scheduling */}
+          <Card>
+            <CardHeader className="p-4 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 md:w-10 h-8 md:h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CalendarClock className="h-4 md:h-5 w-4 md:w-5 text-indigo-600" />
+                </div>
+                <div className="min-w-0">
+                  <CardTitle className="text-base md:text-lg">Scheduling & Limits</CardTitle>
+                  <CardDescription className="text-xs md:text-sm">Control when the form is open and how many responses to collect</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4 p-4 md:p-6 pt-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="opens-at" className="text-sm">Opens at <span className="text-gray-400 font-normal">(optional)</span></Label>
+                  <Input
+                    id="opens-at"
+                    type="datetime-local"
+                    value={opensAt}
+                    onChange={(e) => setOpensAt(e.target.value)}
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Form rejects responses before this time.</p>
+                </div>
+                <div>
+                  <Label htmlFor="closes-at" className="text-sm">Closes at <span className="text-gray-400 font-normal">(optional)</span></Label>
+                  <Input
+                    id="closes-at"
+                    type="datetime-local"
+                    value={closesAt}
+                    onChange={(e) => setClosesAt(e.target.value)}
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Form rejects responses after this time.</p>
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="max-responses" className="text-sm">Max responses <span className="text-gray-400 font-normal">(optional)</span></Label>
+                <Input
+                  id="max-responses"
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 100"
+                  value={maxResponses}
+                  onChange={(e) => setMaxResponses(e.target.value)}
+                  className="mt-2 max-w-xs"
+                />
+                <p className="text-xs text-gray-500 mt-1">Stop accepting responses once this limit is reached.</p>
+              </div>
             </CardContent>
           </Card>
 
