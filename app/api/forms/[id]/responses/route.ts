@@ -32,8 +32,8 @@ export async function POST(
     const { id } = await params
     const data = await request.json()
 
-    // Enforce scheduling and response limits (cast because new fields pending migration)
-    const scheduleCheck = await (prisma as any).form.findUnique({
+    // Enforce scheduling and response limits
+    const scheduleCheck = await prisma.form.findUnique({
       where: { id },
       select: { opensAt: true, closesAt: true, maxResponses: true, _count: { select: { responses: true } } },
     })
