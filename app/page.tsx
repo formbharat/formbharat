@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle2, Zap, Shield, TrendingUp, Users, Smartphone, BarChart3, Globe, MessageSquare, PartyPopper, Briefcase, Target, ShoppingCart, Ticket, ClipboardList, Sparkles } from 'lucide-react'
+import { CheckCircle2, Zap, Shield, TrendingUp, Smartphone, BarChart3, Globe, MessageSquare, PartyPopper, Briefcase, Target, ShoppingCart, Ticket, ClipboardList, Sparkles } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useToast } from '@/components/ui/use-toast'
@@ -19,67 +19,70 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero Section — AI input front and center */}
-      <section className="pt-12 md:pt-20 pb-16 md:pb-24 px-4">
+      {/* Hero Banner */}
+      <section className="bg-white border-b border-gray-100 px-4 pt-16 md:pt-24 pb-16 md:pb-24">
         <div className="container mx-auto">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block mb-4 md:mb-6">
-              <span className="bg-orange-100 text-orange-700 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium">
-                🔓 Open Source • Free Forever
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight px-2">
-              Create any form in{' '}
-              <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                10 seconds with AI
-              </span>
+
+          {/* Badge */}
+          <div className="flex justify-center mb-8">
+            <span className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 text-orange-700 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide">
+              <Sparkles className="h-3 w-3" />
+              AI-Powered · Open Source · Free Forever
+            </span>
+          </div>
+
+          {/* Headline */}
+          <div className="max-w-3xl mx-auto text-center mb-10 md:mb-12">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1] mb-5">
+              Build any form in
+              <br />
+              <span className="text-orange-500">10 seconds.</span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto px-4">
-              Describe what you need in plain English — AI builds a complete form instantly. Built for Indian businesses.
+            <p className="text-gray-500 text-base sm:text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
+              Describe what you need in plain English — AI creates a complete, professional form instantly.
             </p>
           </div>
 
-          {/* AI Input — in the hero */}
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 md:p-6">
+          {/* AI Input Card */}
+          <div className="max-w-xl mx-auto">
+            <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-sm">
+
+              {/* Card label */}
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="h-5 w-5 text-orange-500 animate-pulse flex-shrink-0" />
-                <span className="text-sm font-semibold text-gray-700">AI Form Generator</span>
-                <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Free</span>
+                <Sparkles className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                <span className="text-sm font-medium text-gray-700">AI Form Generator</span>
+                <span className="ml-auto text-xs font-medium text-orange-600 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">Free</span>
               </div>
+
+              {/* Textarea */}
               <textarea
                 value={aiDescription}
                 onChange={(e) => setAIDescription(e.target.value)}
                 placeholder="E.g., Customer feedback form for my restaurant with food quality and service ratings..."
-                className="w-full min-h-[100px] md:min-h-[110px] text-base p-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none resize-none"
+                className="w-full min-h-[96px] text-sm md:text-base p-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:bg-white outline-none resize-none transition-all"
                 maxLength={500}
               />
 
               {/* Example chips */}
               <div className="flex flex-wrap gap-2 mt-3 mb-4">
                 {[
-                  'Restaurant feedback',
-                  'Event registration',
-                  'Job application',
-                  'Order form',
-                  'Student enrollment',
-                ].map((example, index) => (
+                  ['Restaurant feedback', 'Customer feedback form for my restaurant with food quality and service ratings'],
+                  ['Event registration', 'Event registration form for a tech conference'],
+                  ['Job application', 'Job application form for software engineer position'],
+                  ['Order form', 'Product order form for handmade jewelry business'],
+                  ['Student enrollment', 'Student enrollment form for online courses'],
+                ].map(([label, full], index) => (
                   <button
                     key={index}
-                    onClick={() => setAIDescription(
-                      ['Customer feedback form for my restaurant with food quality and service ratings',
-                       'Event registration form for a tech conference',
-                       'Job application form for software engineer position',
-                       'Product order form for handmade jewelry business',
-                       'Student enrollment form for online courses'][index]
-                    )}
-                    className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-orange-100 hover:text-orange-700 text-gray-600 rounded-full transition-colors"
+                    onClick={() => setAIDescription(full)}
+                    className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 text-gray-500 border border-gray-200 rounded-full transition-colors"
                   >
-                    {example}
+                    {label}
                   </button>
                 ))}
               </div>
 
+              {/* CTA */}
               <Button
                 onClick={() => {
                   if (!aiDescription.trim() || aiDescription.length < 10) {
@@ -99,49 +102,34 @@ export default function Home() {
                   setShowAuthModal(true)
                 }}
                 disabled={!aiDescription.trim() || aiDescription.length < 10}
-                size="lg"
-                className="w-full h-12 text-base bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 shadow-md hover:shadow-lg transition-all disabled:opacity-50"
+                className="w-full h-11 text-sm font-semibold bg-orange-500 hover:bg-orange-600 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-xl"
               >
-                <Sparkles className="mr-2 h-5 w-5" />
-                Generate Form Free
+                <Sparkles className="mr-2 h-4 w-4" />
+                Generate Form — It's Free
               </Button>
 
-              <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
-                <span>Powered by AWS Bedrock · 5–10 sec</span>
-                <span>No credit card required</span>
-              </div>
+              <p className="mt-3 text-center text-xs text-gray-400">
+                Powered by AWS Bedrock · No credit card · 5–10 seconds
+              </p>
             </div>
 
-            {/* Secondary actions */}
-            <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-gray-500">
-              <span>Prefer to build manually?</span>
-              <div className="flex gap-3">
-                <Link href="/builder" className="font-medium text-orange-600 hover:text-orange-700 underline underline-offset-2">
-                  Start from scratch
-                </Link>
-                <span>·</span>
-                <Link href="/templates" className="font-medium text-orange-600 hover:text-orange-700 underline underline-offset-2">
-                  Browse templates
-                </Link>
-              </div>
-            </div>
-
-            {/* Trust badges */}
-            <div className="mt-6 flex flex-wrap gap-4 justify-center text-xs text-gray-500">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                <span>100% Open Source</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                <span>Free Forever</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+            {/* Secondary links */}
+            <div className="mt-5 flex items-center justify-center gap-3 text-sm text-gray-400">
+              <Link href="/builder" className="hover:text-gray-600 transition-colors">
+                Start from scratch
+              </Link>
+              <span>·</span>
+              <Link href="/templates" className="hover:text-gray-600 transition-colors">
+                Browse templates
+              </Link>
+              <span>·</span>
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
                 <span>Made in India 🇮🇳</span>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
