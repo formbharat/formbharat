@@ -113,20 +113,20 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Secondary links */}
-            <div className="mt-5 flex items-center justify-center gap-3 text-sm text-gray-400">
-              <Link href="/builder" className="hover:text-gray-600 transition-colors">
-                Start from scratch
-              </Link>
-              <span>·</span>
-              <Link href="/templates" className="hover:text-gray-600 transition-colors">
-                Browse templates
-              </Link>
-              <span>·</span>
-              <div className="flex items-center gap-1">
+            {/* Trust line */}
+            <div className="mt-5 flex items-center justify-center gap-4 text-xs text-gray-400">
+              <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                <span>Made in India 🇮🇳</span>
-              </div>
+                No credit card
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                Free forever
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                Made in India 🇮🇳
+              </span>
             </div>
           </div>
 
