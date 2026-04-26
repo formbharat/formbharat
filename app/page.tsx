@@ -1,22 +1,109 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Zap, Shield, TrendingUp, Smartphone, BarChart3, Globe, MessageSquare, PartyPopper, Briefcase, Target, ShoppingCart, Ticket, ClipboardList, Sparkles, CheckCircle2 } from 'lucide-react'
+import {
+  Sparkles, CheckCircle2, ArrowRight, ChevronDown,
+  MessageSquare, IndianRupee, ShieldCheck, Zap, BarChart3,
+  Share2, Globe, GitBranch, Star
+} from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useToast } from '@/components/ui/use-toast'
 import { GuestAIGenerator } from '@/components/GuestAIGenerator'
+import AnimatedSection from '@/components/AnimatedSection'
+
+// ─── AI typing demo ───────────────────────────────────────────────────────────
+const DEMO_PROMPT = 'Customer feedback form for my restaurant...'
+const DEMO_FIELDS = [
+  { label: 'Full Name', hint: 'Short text' },
+  { label: 'Email Address', hint: 'Email' },
+  { label: 'Overall Rating', hint: 'Rating 1–5' },
+  { label: 'Comments', hint: 'Long text' },
+]
+
+function useFormDemo() {
+  const [phase, setPhase] = useState<'typing' | 'generating' | 'fields' | 'pause'>('typing')
+  const [chars, setChars] = useState(0)
+  const [visible, setVisible] = useState(0)
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>
+    if (phase === 'typing') {
+      if (chars < DEMO_PROMPT.length) t = setTimeout(() => setChars(c => c + 1), 52)
+      else t = setTimeout(() => setPhase('generating'), 750)
+    } else if (phase === 'generating') {
+      t = setTimeout(() => { setPhase('fields'); setVisible(0) }, 1800)
+    } else if (phase === 'fields') {
+      if (visible < DEMO_FIELDS.length) t = setTimeout(() => setVisible(v => v + 1), 380)
+      else t = setTimeout(() => setPhase('pause'), 400)
+    } else {
+      t = setTimeout(() => { setPhase('typing'); setChars(0); setVisible(0) }, 3800)
+    }
+    return () => clearTimeout(t)
+  }, [phase, chars, visible])
+
+  return { phase, text: DEMO_PROMPT.slice(0, chars), visible }
+}
+
+// ─── FAQ item ─────────────────────────────────────────────────────────────────
+function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
+  return (
+    <div className="border-b border-gray-100 last:border-0">
+      <button
+        className="w-full text-left py-4 flex items-center justify-between gap-4 text-sm md:text-base font-medium text-gray-800 hover:text-orange-600 transition-colors"
+        onClick={onToggle}
+      >
+        {q}
+        <ChevronDown className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180 text-orange-500' : 'text-gray-400'}`} />
+      </button>
+      <div
+        className="overflow-hidden transition-all duration-300"
+        style={{ maxHeight: open ? '200px' : '0', paddingBottom: open ? '1rem' : '0' }}
+      >
+        <p className="text-sm text-gray-500 leading-relaxed">{a}</p>
+      </div>
+    </div>
+  )
+}
 
 export default function Home() {
   const { toast } = useToast()
   const [aiDescription, setAIDescription] = useState('')
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const demo = useFormDemo()
+
+  const faqItems = [
+    {
+      q: 'Is FormBharat really free?',
+      a: 'Yes — 100% free during early access. Unlimited forms, unlimited responses, all features included. Early access users will be grandfathered into a generous free tier when we introduce paid plans.',
+    },
+    {
+      q: 'How does the AI form generator work?',
+      a: 'Describe your form in plain English — e.g. "customer feedback form for a restaurant with star ratings". Our AI understands your intent and generates all fields, labels, and structure in under 10 seconds.',
+    },
+    {
+      q: 'Do I need coding skills?',
+      a: 'Not at all. If you can type, you can build a form. FormBharat is designed for everyone — from kirana store owners to startup founders.',
+    },
+    {
+      q: 'How do respondents fill out my form?',
+      a: 'Every form gets a unique public link. Share it via WhatsApp, email, or embed it on your website. No login needed for respondents.',
+    },
+    {
+      q: 'Can I collect UPI / card payments?',
+      a: 'Yes. Add a Payment field to your form and respondents can pay via UPI, cards, or net banking through Razorpay — integrated directly into the form submission.',
+    },
+    {
+      q: 'Where is my data stored?',
+      a: 'All data is stored on Supabase PostgreSQL. We never sell or share your data. Export everything as CSV at any time.',
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <Header />
 
       {/* Hero */}
@@ -115,209 +202,366 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Auth Modal for AI Generation */}
-      <GuestAIGenerator 
-        open={showAuthModal} 
-        onOpenChange={setShowAuthModal}
-        initialDescription={aiDescription}
-      />
-
-      {/* Stats Section */}
-      <section className="py-8 md:py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">100%</div>
-              <div className="text-xs md:text-sm lg:text-base text-gray-600">Free Early Access</div>
+      {/* ── TICKER ── */}
+      <div className="border-y border-gray-100 py-3.5 bg-white overflow-hidden">
+        <div className="flex gap-8 animate-scroll-left whitespace-nowrap">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex items-center gap-8 flex-shrink-0">
+              {[
+                'Customer Feedback', 'Event Registration', 'Job Applications', 'Order Forms',
+                'Lead Generation', 'Student Enrollment', 'Support Tickets', 'Market Research',
+                'Booking Forms', 'NPS Surveys', 'Membership Sign-ups', 'Course Registration',
+              ].map((label) => (
+                <span key={label} className="flex items-center gap-2 text-xs text-gray-400 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-300 flex-shrink-0" />
+                  {label}
+                </span>
+              ))}
             </div>
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent mb-1 md:mb-2">10s</div>
-              <div className="text-xs md:text-sm lg:text-base text-gray-600">AI Form Generation</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">∞</div>
-              <div className="text-xs md:text-sm lg:text-base text-gray-600">Unlimited Forms</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">🇮🇳</div>
-              <div className="text-xs md:text-sm lg:text-base text-gray-600">Built for India</div>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Features Section */}
-      <section id="features" className="py-12 md:py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">Everything You Need</h2>
-            <p className="text-base md:text-lg lg:text-xl text-gray-600 px-4">
-              Powerful features designed specifically for Indian small businesses
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
-            {/* AI Feature — highlighted */}
-            <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-pink-50 hover:border-orange-300 transition h-full md:col-span-2 lg:col-span-1">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <Sparkles className="h-8 w-8 text-white" />
-                  </div>
-                </div>
-                <div className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full mb-2 mx-auto">
-                  ✨ NEW
-                </div>
-                <CardTitle>AI Form Generator</CardTitle>
-                <CardDescription>
-                  Describe your form in plain English. AI builds a complete, professional form in 10 seconds.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
-                    <Zap className="h-8 w-8 text-orange-600" />
-                  </div>
-                </div>
-                <CardTitle>Drag &amp; Drop Builder</CardTitle>
-                <CardDescription>
-                  Create forms in minutes with our intuitive visual builder. No coding needed.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center">
-                    <Smartphone className="h-8 w-8 text-pink-600" />
-                  </div>
-                </div>
-                <CardTitle>WhatsApp Integration</CardTitle>
-                <CardDescription>
-                  Share forms and collect responses via WhatsApp - the #1 platform in India.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
-                    <BarChart3 className="h-8 w-8 text-blue-600" />
-                  </div>
-                </div>
-                <CardTitle>Smart Analytics</CardTitle>
-                <CardDescription>
-                  Understand your responses with charts, trends, and actionable insights.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
-                    <Shield className="h-8 w-8 text-green-600" />
-                  </div>
-                </div>
-                <CardTitle>Secure & Private</CardTitle>
-                <CardDescription>
-                  Your data is encrypted and secure. GDPR compliant with Indian data hosting.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
-                    <Globe className="h-8 w-8 text-purple-600" />
-                  </div>
-                </div>
-                <CardTitle>Custom Branding</CardTitle>
-                <CardDescription>
-                  Add your logo, colors, and domain to make forms truly yours.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-orange-200 transition h-full">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center">
-                    <TrendingUp className="h-8 w-8 text-yellow-600" />
-                  </div>
-                </div>
-                <CardTitle>Real-time Updates</CardTitle>
-                <CardDescription>
-                  Get instant notifications when someone submits your form.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases Section */}
-      <section className="py-12 md:py-20 px-4 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 px-4">Perfect for Every Business</h2>
-            <p className="text-base md:text-lg lg:text-xl text-gray-600 px-4">
-              From customer feedback to event registrations - we've got you covered
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-20 md:py-28 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Simple by design</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">From idea to live form in 3 steps</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            <div className="hidden md:block absolute top-10 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px border-t-2 border-dashed border-orange-200" />
             {[
-              { title: 'Customer Feedback', icon: MessageSquare, desc: 'NPS surveys, reviews, complaints', color: 'bg-gray-100' },
-              { title: 'Event Registration', icon: PartyPopper, desc: 'Webinars, conferences, meetups', color: 'bg-orange-100' },
-              { title: 'Job Applications', icon: Briefcase, desc: 'Hiring, internships, freelance', color: 'bg-amber-100' },
-              { title: 'Lead Generation', icon: Target, desc: 'Contact forms, quotes, demos', color: 'bg-red-100' },
-              { title: 'Order Forms', icon: ShoppingCart, desc: 'Product orders, bookings, services', color: 'bg-gray-100' },
-              { title: 'Surveys & Polls', icon: BarChart3, desc: 'Market research, voting, opinions', color: 'bg-blue-100' },
-              { title: 'Support Tickets', icon: Ticket, desc: 'Help desk, bug reports, requests', color: 'bg-yellow-100' },
-              { title: 'Registrations', icon: ClipboardList, desc: 'Course signup, membership, subscriptions', color: 'bg-orange-100' },
-            ].map((useCase, i) => {
-              const IconComponent = useCase.icon
+              { num: '1', icon: Sparkles, title: 'Describe', desc: 'Tell the AI what kind of form you need in plain English. No technical knowledge required.' },
+              { num: '2', icon: Zap, title: 'Generate', desc: 'AI builds your complete form with the right fields and structure in under 10 seconds.' },
+              { num: '3', icon: Share2, title: 'Share & Collect', desc: 'Share via WhatsApp, embed on your site, or use the link. Responses arrive in real-time.' },
+            ].map((step, i) => {
+              const Icon = step.icon
               return (
-                <Card key={i} className="text-center hover:shadow-lg transition">
-                  <CardHeader>
-                    <div className="flex justify-center mb-3">
-                      <div className={`w-16 h-16 ${useCase.color} rounded-2xl flex items-center justify-center`}>
-                        <IconComponent className="h-8 w-8 text-gray-700" />
-                      </div>
+                <AnimatedSection key={i} delay={i * 150}>
+                  <div className="relative bg-white rounded-2xl p-6 border border-gray-100 text-center hover:border-orange-200 hover:shadow-sm transition-all duration-300">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+                      {step.num}
                     </div>
-                    <CardTitle className="text-lg">{useCase.title}</CardTitle>
-                    <CardDescription className="text-sm">{useCase.desc}</CardDescription>
-                  </CardHeader>
-                </Card>
+                    <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-4 mt-2">
+                      <Icon className="h-5 w-5 text-orange-500" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">{step.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                  </div>
+                </AnimatedSection>
               )
             })}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-12 md:py-20 px-4">
-        <div className="container mx-auto">
-          <div className="bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl md:rounded-2xl p-6 md:p-12 text-center text-white max-w-4xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">Ready to Get Started?</h2>
-            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 opacity-90">
-              Join thousands of Indian businesses creating beautiful forms
+      {/* ── AI DEMO ── */}
+      <section className="py-20 md:py-28 px-4">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">See it in action</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Watch AI build your form live</h2>
+            <p className="text-gray-500 mt-3 max-w-md mx-auto text-sm md:text-base">
+              This animation runs in real-time — exactly how it works when you use it.
             </p>
-            <Link href="/builder" className="inline-block w-full sm:w-auto">
-              <Button size="lg" variant="secondary" className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 h-12 md:h-14">
-                Create Your First Form - It's Free!
-              </Button>
-            </Link>
+          </AnimatedSection>
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className="bg-gray-950 rounded-2xl p-5 font-mono text-sm min-h-[220px]">
+                <div className="flex gap-1.5 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/70" />
+                </div>
+                <p className="text-gray-500 text-xs mb-2">$ describe your form</p>
+                <p className="text-green-400 leading-relaxed min-h-[3rem]">
+                  {demo.text}
+                  {demo.phase === 'typing' && <span className="animate-cursor">▊</span>}
+                </p>
+                {demo.phase !== 'typing' && (
+                  <div className="mt-4 flex items-center gap-2 text-orange-400 text-xs">
+                    <Sparkles className={`h-3 w-3 ${demo.phase === 'generating' ? 'animate-spin' : ''}`} />
+                    {demo.phase === 'generating' ? 'Generating your form...' : '✓ Form generated in 2s'}
+                  </div>
+                )}
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 min-h-[220px] shadow-sm">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+                  <div className="w-2 h-2 rounded-full bg-orange-400" />
+                  <span className="text-xs font-medium text-gray-600">Customer Feedback</span>
+                  {(demo.phase === 'fields' || demo.phase === 'pause') && (
+                    <span className="ml-auto text-xs text-green-600 font-medium">✓ Ready</span>
+                  )}
+                </div>
+                <div className="space-y-2.5">
+                  {DEMO_FIELDS.slice(0, demo.visible).map((f, i) => (
+                    <div key={i} className="animate-fade-in-up">
+                      <p className="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">{f.label}</p>
+                      <div className="h-7 rounded-lg bg-gray-50 border border-gray-100 flex items-center px-3">
+                        <span className="text-[10px] text-gray-300">{f.hint}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {demo.phase === 'generating' && (
+                    <div className="space-y-2">
+                      {[1, 2, 3].map(n => (
+                        <div key={n} className="h-7 rounded-lg bg-gray-100 animate-pulse" style={{ animationDelay: `${n * 100}ms` }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+          <AnimatedSection className="mt-8 text-center">
+            <Button
+              onClick={() => {
+                setAIDescription('Customer feedback form for a restaurant with food and service ratings')
+                document.getElementById('hero-input')?.focus()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              variant="outline"
+              className="border-orange-200 text-orange-600 hover:bg-orange-50 rounded-xl"
+            >
+              Try it yourself — it&apos;s free <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ── INDIA-FIRST ── */}
+      <section className="py-20 md:py-28 px-4 bg-orange-50">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Built for India</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              The only form builder that<br className="hidden md:block" /> truly understands India
+            </h2>
+            <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm md:text-base">
+              Not adapted from a Western product. Built from scratch for how India actually works.
+            </p>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                icon: MessageSquare, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-100',
+                badge: 'WhatsApp native', title: 'WhatsApp Sharing',
+                desc: 'Share forms directly to WhatsApp with one click. India has 500M+ WhatsApp users — meet them where they are.',
+                detail: 'Every public form gets a WhatsApp share button built in.',
+              },
+              {
+                icon: IndianRupee, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100',
+                badge: 'UPI + Cards', title: 'Razorpay Payments',
+                desc: 'Add a payment field and collect fees via UPI, cards, and net banking — as part of the form submission flow.',
+                detail: 'Perfect for order forms, event fees, and service bookings.',
+              },
+              {
+                icon: ShieldCheck, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100',
+                badge: '10K free/month', title: 'Phone OTP Verification',
+                desc: 'Verify respondents\' Indian mobile numbers with Firebase OTP before submission. Stop fake entries cold.',
+                detail: 'Powered by Firebase Authentication.',
+              },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <AnimatedSection key={i} delay={i * 120}>
+                  <div className={`bg-white rounded-2xl p-6 border ${item.border} hover:shadow-md transition-all duration-300 h-full`}>
+                    <div className="flex items-start justify-between mb-5">
+                      <div className={`w-10 h-10 ${item.bg} rounded-xl flex items-center justify-center`}>
+                        <Icon className={`h-5 w-5 ${item.color}`} />
+                      </div>
+                      <span className={`text-xs font-semibold ${item.color} ${item.bg} px-2.5 py-1 rounded-full border ${item.border}`}>
+                        {item.badge}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed mb-3">{item.desc}</p>
+                    <p className="text-xs text-gray-400">{item.detail}</p>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
           </div>
         </div>
       </section>
+
+      {/* ── FEATURES ── */}
+      <section className="py-20 md:py-28 px-4">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Everything you need</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Powerful. Simple. Fast.</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { icon: Zap, bg: 'bg-orange-50', color: 'text-orange-500', title: 'Drag & Drop Builder', desc: '12+ field types. Conditional logic. Multi-step forms. No coding required.' },
+              { icon: BarChart3, bg: 'bg-blue-50', color: 'text-blue-500', title: 'Analytics & Insights', desc: 'Real-time dashboard. Completion rates. CSV export. Field-level data.' },
+              { icon: GitBranch, bg: 'bg-purple-50', color: 'text-purple-500', title: 'Conditional Logic', desc: 'Show or hide fields based on answers. Build intelligent, dynamic forms.' },
+              { icon: Globe, bg: 'bg-green-50', color: 'text-green-500', title: 'Embed Anywhere', desc: 'Drop your form into any website with one line of code. QR code included.' },
+              { icon: Share2, bg: 'bg-pink-50', color: 'text-pink-500', title: 'Instant Sharing', desc: 'Public link, WhatsApp share, QR code, or iframe embed — all built in.' },
+              { icon: Sparkles, bg: 'bg-amber-50', color: 'text-amber-500', title: 'AI-Powered', desc: 'Generate complete forms from a sentence. Smart suggestions as you build.' },
+            ].map((feat, i) => {
+              const Icon = feat.icon
+              return (
+                <AnimatedSection key={i} delay={i * 70}>
+                  <div className="p-5 rounded-2xl border border-gray-100 hover:border-orange-200 hover:shadow-sm transition-all duration-300 h-full">
+                    <div className={`w-9 h-9 ${feat.bg} rounded-xl flex items-center justify-center mb-4`}>
+                      <Icon className={`h-4 w-4 ${feat.color}`} />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-1.5 text-sm">{feat.title}</h3>
+                    <p className="text-xs text-gray-500 leading-relaxed">{feat.desc}</p>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ── */}
+      <section className="py-20 md:py-28 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-4xl">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Pricing</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Honest pricing. Always.</h2>
+            <p className="text-gray-500 mt-3 text-sm md:text-base">No surprise bills. No credit card. Early access users get everything free, forever.</p>
+          </AnimatedSection>
+          <AnimatedSection>
+            <div className="max-w-sm mx-auto bg-white rounded-2xl border-2 border-orange-200 p-8 shadow-sm text-center">
+              <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-5">
+                <Sparkles className="h-3 w-3" />
+                Early Access — Free Forever
+              </div>
+              <div className="text-5xl font-bold text-gray-900 mb-1">₹0</div>
+              <p className="text-gray-400 text-sm mb-7">per month, always</p>
+              <div className="text-left space-y-3 mb-8">
+                {[
+                  'Unlimited forms & responses',
+                  'AI Form Generator',
+                  'WhatsApp sharing + QR code',
+                  'Razorpay payment fields',
+                  'Phone OTP verification',
+                  'Conditional logic',
+                  'Analytics dashboard',
+                  'CSV export',
+                  'Embed on your website',
+                ].map(f => (
+                  <div key={f} className="flex items-center gap-2.5 text-sm text-gray-700">
+                    <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    {f}
+                  </div>
+                ))}
+              </div>
+              <Link href="/builder">
+                <Button className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl">
+                  Start building free <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <p className="text-xs text-gray-400 mt-3">No credit card · Ready in 30 seconds</p>
+            </div>
+          </AnimatedSection>
+          <AnimatedSection>
+            <p className="text-center text-xs text-gray-400 mt-5 max-w-sm mx-auto">
+              Team plans coming in the future. Free users will be grandfathered into a generous permanent free tier.
+            </p>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-20 md:py-28 px-4">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Early users</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Loved by Indian businesses</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                quote: 'Finally a form tool that just works in India. Set up our restaurant feedback form in 2 minutes using AI. Customers love filling it via WhatsApp.',
+                name: 'Priya Sharma', role: 'Restaurant Owner, Pune', initials: 'PS', color: 'bg-orange-100 text-orange-700',
+              },
+              {
+                quote: 'We use it for event registrations. Conditional logic is powerful — attendees only see fields relevant to them. Switched from Typeform, saving ₹2,000/month.',
+                name: 'Rahul Verma', role: 'Event Organizer, Delhi', initials: 'RV', color: 'bg-blue-100 text-blue-700',
+              },
+              {
+                quote: 'The UPI payment field is a game-changer. We collect booking fees directly in the form. No separate payment link needed.',
+                name: 'Ananya Patel', role: 'Studio Owner, Bengaluru', initials: 'AP', color: 'bg-purple-100 text-purple-700',
+              },
+            ].map((t, i) => (
+              <AnimatedSection key={i} delay={i * 120}>
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 hover:border-orange-100 hover:shadow-sm transition-all duration-300 h-full flex flex-col">
+                  <div className="flex gap-0.5 mb-4">
+                    {[...Array(5)].map((_, j) => (
+                      <Star key={j} className="h-3.5 w-3.5 text-orange-400 fill-orange-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-5">&quot;{t.quote}&quot;</p>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${t.color}`}>
+                      {t.initials}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-800">{t.name}</p>
+                      <p className="text-xs text-gray-400">{t.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="py-20 md:py-28 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-2xl">
+          <AnimatedSection className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">FAQ</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Questions? We&apos;ve got answers.</h2>
+          </AnimatedSection>
+          <AnimatedSection>
+            <div className="bg-white rounded-2xl border border-gray-100 px-6">
+              {faqItems.map((item, i) => (
+                <FAQItem
+                  key={i}
+                  q={item.q}
+                  a={item.a}
+                  open={openFaq === i}
+                  onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+                />
+              ))}
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section className="py-20 md:py-28 px-4 bg-orange-500">
+        <div className="container mx-auto max-w-2xl text-center">
+          <AnimatedSection>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Your first form is one sentence away.
+            </h2>
+            <p className="text-orange-100 text-base md:text-lg mb-8 max-w-md mx-auto">
+              Free forever. No credit card. Made in India.
+            </p>
+            <Link href="/builder">
+              <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-semibold px-8 h-12 rounded-xl shadow-md">
+                Get started free <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      <GuestAIGenerator
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        initialDescription={aiDescription}
+      />
 
       <Footer />
     </div>
