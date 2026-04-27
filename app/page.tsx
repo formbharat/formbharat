@@ -256,14 +256,14 @@ export default function Home() {
                 bg: 'bg-slate-50', border: 'border-slate-100', tag: 'text-slate-400',
               },
             ].map((item, i) => (
-              <AnimatedSection key={i} delay={i * 100}>
-                <div className={`rounded-2xl border p-5 ${item.bg} ${item.border}`}>
+              <AnimatedSection key={i} delay={i * 100} className="h-full">
+                <div className={`rounded-2xl border p-5 flex flex-col h-full ${item.bg} ${item.border}`}>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-semibold text-gray-700">{item.tool}</span>
                     <span className={`text-xs font-medium ${item.tag}`}>{item.price}</span>
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed mb-4">{item.problem}</p>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                  <p className="text-xs text-gray-500 leading-relaxed flex-1 mb-4">{item.problem}</p>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-auto">
                     <span className="w-3 h-3 rounded-full bg-red-200 flex items-center justify-center text-red-400 font-bold text-[9px]">✕</span>
                     Not built for India
                   </div>
