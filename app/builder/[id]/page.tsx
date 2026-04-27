@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { FormBuilder } from '@/components/form-builder/FormBuilder'
 import { useToast } from '@/components/ui/use-toast'
 import { FormField } from '@/lib/types'
+import { getValidToken } from '@/lib/getToken'
 
 export default function EditFormPage() {
   const router = useRouter()
@@ -19,7 +20,7 @@ export default function EditFormPage() {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = await getValidToken()
         if (!token) {
           router.push('/auth/login')
           return
@@ -47,7 +48,7 @@ export default function EditFormPage() {
       return
     }
 
-    const token = localStorage.getItem('token')
+    const token = await getValidToken()
     if (!token) {
       router.push('/auth/login')
       return

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, TrendingUp, Users, Clock, BarChart3, PieChart } from 'lucide-react'
 import { calculateFormAnalytics, FormAnalytics } from '@/lib/analytics'
+import { getValidToken } from '@/lib/getToken'
 
 function AnalyticsContent() {
   const params = useParams()
@@ -22,7 +23,7 @@ function AnalyticsContent() {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       
       // Fetch form
       const formResponse = await fetch(`/api/forms/${params.id}`, {

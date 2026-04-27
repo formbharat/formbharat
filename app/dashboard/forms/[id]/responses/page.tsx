@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { ArrowLeft, Download, BarChart3, Calendar, Loader2 } from 'lucide-react'
+import { getValidToken } from '@/lib/getToken'
 
 function ResponsesContent() {
   const router = useRouter()
@@ -23,7 +24,7 @@ function ResponsesContent() {
 
   const fetchFormAndResponses = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       if (!token) {
         router.push('/auth/login')
         return

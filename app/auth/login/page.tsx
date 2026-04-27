@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
+import { storeSession } from '@/lib/getToken'
 import { CheckCircle2, Shield, Zap, TrendingUp } from 'lucide-react'
 
 export default function LoginPage() {
@@ -33,7 +34,7 @@ export default function LoginPage() {
         throw new Error(data.error || 'Login failed')
       }
 
-      localStorage.setItem('token', data.session.access_token)
+      storeSession(data.session.access_token, data.session.refresh_token)
       
       toast({
         title: 'Success',

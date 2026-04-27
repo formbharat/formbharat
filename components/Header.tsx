@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Menu, X, LogOut, ChevronDown, ArrowRight, Target, BarChart2, Layers, Building2, MessageCircle, TrendingUp } from 'lucide-react'
 import { Logo } from '@/components/Logo'
+import { clearSession } from '@/lib/getToken'
 
 const resourcePillars = [
   {
@@ -86,7 +87,7 @@ export default function Header() {
   }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
+    clearSession()
     setIsLoggedIn(false)
     router.push('/')
   }

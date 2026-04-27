@@ -8,6 +8,7 @@ import { Sparkles, Loader2, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import { createClient } from '@supabase/supabase-js'
+import { storeSession } from '@/lib/getToken'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -153,7 +154,7 @@ export function GuestAIGenerator({ open, onOpenChange, initialDescription = '' }
       }
 
       const accessToken = sessionData.session.access_token
-      localStorage.setItem('token', accessToken)
+      storeSession(accessToken, sessionData.session.refresh_token)
 
       // Generate AI form (email users need password setup later)
       await generateAIForm(accessToken, user.needsPassword || false)

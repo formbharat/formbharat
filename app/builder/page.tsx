@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { FormField } from '@/lib/types'
 import { Loader2, Lock } from 'lucide-react'
+import { getValidToken, storeSession } from '@/lib/getToken'
 
 function BuilderPageInner() {
   const router = useRouter()
@@ -112,7 +113,7 @@ function BuilderPageInner() {
   }, [toast, searchParams])
 
   const generateFromDescription = async (description: string) => {
-    const token = localStorage.getItem('token')
+    const token = await getValidToken()
     if (!token) return
 
     setIsSaving(true)
@@ -225,7 +226,7 @@ function BuilderPageInner() {
     }
 
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       const response = await fetch('/api/auth/set-password', {
         method: 'POST',
         headers: {
@@ -274,7 +275,7 @@ function BuilderPageInner() {
     }
 
     // Check if user is logged in
-    const token = localStorage.getItem('token')
+    const token = await getValidToken()
     if (token) {
       // User is logged in, save directly
       await saveForm(data, token)
@@ -311,14 +312,14 @@ function BuilderPageInner() {
 
       // Store the authentication token
       if (result.session?.access_token) {
-        localStorage.setItem('token', result.session.access_token)
+        storeSession(result.session.access_token, result.session.refresh_token)
       }
 
       // Save the form after successful auth
       if (formData) {
-        const token = localStorage.getItem('token')
-        if (token) {
-          await saveForm(formData, token)
+        const freshToken = await getValidToken()
+        if (freshToken) {
+          await saveForm(formData, freshToken)
           setShowAuthDialog(false)
         }
       }

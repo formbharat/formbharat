@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/components/ui/use-toast'
 import { Copy, ExternalLink, Eye, Trash2, Plus, BarChart3, FileText, Users, TrendingUp, MoreVertical, Edit, Share2, CopyPlus, LineChart, Settings, LogOut, Sparkles, Wand2, X } from 'lucide-react'
 import { AIFormGenerator } from '@/components/AIFormGenerator'
+import { getValidToken, clearSession } from '@/lib/getToken'
 
 function DashboardContent() {
   const router = useRouter()
@@ -23,7 +24,7 @@ function DashboardContent() {
   }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
+    clearSession()
     router.push('/')
     toast({
       title: 'Logged out',
@@ -33,7 +34,7 @@ function DashboardContent() {
 
   const fetchForms = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       if (!token) {
         router.push('/auth/login')
         return
@@ -82,7 +83,7 @@ function DashboardContent() {
 
   const handleAIFormGenerated = async (form: { title: string; description: string; fields: any[] }) => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       if (!token) {
         router.push('/auth/login')
         return
@@ -128,7 +129,7 @@ function DashboardContent() {
     if (!confirm('Are you sure you want to delete this form?')) return
 
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       const response = await fetch(`/api/forms/${formId}`, {
         method: 'DELETE',
         headers: {

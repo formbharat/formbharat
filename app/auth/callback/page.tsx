@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
+import { storeSession } from '@/lib/getToken'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,8 +27,7 @@ function AuthCallbackContent() {
         }
 
         if (session) {
-          // Store the access token
-          localStorage.setItem('token', session.access_token)
+          storeSession(session.access_token, session.refresh_token)
 
           // Sync user to database
           await fetch('/api/auth/sync-user', {

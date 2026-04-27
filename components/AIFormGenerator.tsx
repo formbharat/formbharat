@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Sparkles, Loader2, RefreshCw, Check } from 'lucide-react'
 import { FormField } from '@/lib/types'
+import { getValidToken } from '@/lib/getToken'
 
 interface AIFormGeneratorProps {
   open: boolean
@@ -55,7 +56,7 @@ export function AIFormGenerator({ open, onOpenChange, onFormGenerated }: AIFormG
     setGeneratedForm(null)
 
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       if (!token) {
         throw new Error('Please log in to use AI features')
       }

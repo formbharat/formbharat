@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { getValidToken } from '@/lib/getToken'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -14,14 +15,14 @@ export default function ProtectedRoute({ children, redirectTo = '/auth/login' }:
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token')
-      
+    const checkAuth = async () => {
+      const token = await getValidToken()
+
       if (!token) {
         router.push(redirectTo)
         return
       }
-      
+
       setIsAuthenticated(true)
       setIsLoading(false)
     }

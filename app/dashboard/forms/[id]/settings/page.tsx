@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { ArrowLeft, Bell, Webhook, Zap, Send, Code, Copy, CheckCircle2, XCircle, Clock, Download, QrCode, CornerDownRight, CalendarClock } from 'lucide-react'
 import QRCode from 'qrcode'
+import { getValidToken } from '@/lib/getToken'
 
 function FormSettingsContent() {
   const params = useParams()
@@ -62,7 +63,7 @@ function FormSettingsContent() {
 
   const fetchForm = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       const response = await fetch(`/api/forms/${params.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       })
@@ -123,7 +124,7 @@ function FormSettingsContent() {
 
   const fetchWebhookLogs = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       const response = await fetch(`/api/forms/${params.id}/webhook/logs`, {
         headers: { 'Authorization': `Bearer ${token}` },
       })
@@ -183,7 +184,7 @@ function FormSettingsContent() {
 
   const saveSettings = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = await getValidToken()
       const response = await fetch(`/api/forms/${params.id}/settings`, {
         method: 'PUT',
         headers: {
