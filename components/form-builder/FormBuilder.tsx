@@ -13,8 +13,9 @@ import { shouldShowField } from '@/lib/conditional-logic'
 import { SortableField } from './SortableField'
 import { FieldTypeSelector } from './FieldTypeSelector'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Save, Eye, Plus, FileText, ChevronLeft, LayoutGrid, Home, HelpCircle, BookTemplate } from 'lucide-react'
+import { Save, Eye, Plus, FileText, ChevronLeft, LayoutGrid, Home, HelpCircle, BookTemplate, MapPin } from 'lucide-react'
 import Link from 'next/link'
+import { BuilderTour } from '@/components/BuilderTour'
 
 interface FormBuilderProps {
   initialTitle?: string
@@ -99,6 +100,19 @@ export function FormBuilder({
   const [description, setDescription] = useState(initialDescription)
   const [fields, setFields] = useState<FormField[]>(initialFields)
   const [showPreview, setShowPreview] = useState(false)
+  const [tourActive, setTourActive] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !localStorage.getItem('fb-builder-tour-seen')) {
+      const t = setTimeout(() => setTourActive(true), 900)
+      return () => clearTimeout(t)
+    }
+  }, [])
+
+  const closeTour = () => {
+    setTourActive(false)
+    if (typeof window !== 'undefined') localStorage.setItem('fb-builder-tour-seen', '1')
+  }
 
   // Update state when props change (template loading)
   useEffect(() => {
@@ -211,11 +225,12 @@ export function FormBuilder({
 
             {/* Right Section - Action Buttons */}
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setShowPreview(true)}>
+              <Button data-tour="preview-btn" variant="outline" size="sm" onClick={() => setShowPreview(true)}>
                 <Eye className="mr-0 sm:mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">Preview</span>
               </Button>
-              <Button 
+              <Button
+                data-tour="save-btn"
                 onClick={handleSave}
                 disabled={isSaving}
                 size="sm"
@@ -309,7 +324,7 @@ export function FormBuilder({
         <div className="grid lg:grid-cols-[300px_1fr] gap-6">
           {/* Sidebar - Field Types */}
           <div className="lg:sticky lg:top-24 h-fit">
-            <Card className="p-4">
+            <Card data-tour="add-fields" className="p-4">
               <h2 className="font-semibold mb-4 flex items-center gap-2">
                 <Plus className="h-5 w-5 text-orange-500" />
                 Add Fields
@@ -321,7 +336,7 @@ export function FormBuilder({
           {/* Canvas */}
           <div className="space-y-6">
             {/* Form Settings */}
-            <Card className="p-6">
+            <Card data-tour="form-details" className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <FileText className="h-5 w-5 text-orange-500" />
                 <h2 className="text-lg font-semibold">Form Details</h2>
@@ -354,7 +369,7 @@ export function FormBuilder({
             </Card>
 
             {/* Form Fields */}
-            <Card className="p-6">
+            <Card data-tour="form-canvas" className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-orange-500" />
@@ -418,6 +433,22 @@ export function FormBuilder({
           </div>
         </div>
       </div>
+      <BuilderTour active={tourActive} onClose={closeTour} />
+
+      {/* Floating tour trigger */}
+      {!tourActive && (
+        <button
+          onClick={() => setTourActive(true)}
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-white border border-orange-200 shadow-lg rounded-full pl-3.5 pr-4 py-2.5 text-sm font-medium text-orange-500 hover:bg-orange-50 hover:shadow-xl transition-all duration-200 group"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
+          </span>
+          <MapPin className="h-4 w-4" />
+          <span>Take a tour</span>
+        </button>
+      )}
     </div>
   )
 }
