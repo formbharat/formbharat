@@ -8,14 +8,17 @@ export default function TawkToChat() {
     // Free live chat widget - perfect for MVP
     // Sign up at https://www.tawk.to to get your property ID
     
+    const w = window as any
+    w.Tawk_API = w.Tawk_API || {}
+    w.Tawk_LoadStart = new Date()
+
+    const s0 = document.getElementsByTagName('script')[0]
     const script = document.createElement('script')
     script.async = true
-    script.src = 'https://embed.tawk.to/YOUR_PROPERTY_ID/YOUR_WIDGET_ID'
+    script.src = 'https://embed.tawk.to/69efabcbbb1e011c30564f1f/1jn83e55j'
     script.charset = 'UTF-8'
     script.setAttribute('crossorigin', '*')
-    
-    // Add script to document
-    document.body.appendChild(script)
+    s0.parentNode?.insertBefore(script, s0)
 
     // Cleanup function
     return () => {
