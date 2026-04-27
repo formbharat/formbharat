@@ -439,7 +439,7 @@ export function FormBuilder({
       {!tourActive && (
         <button
           onClick={() => setTourActive(true)}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-white border border-orange-200 shadow-lg rounded-full pl-3.5 pr-4 py-2.5 text-sm font-medium text-orange-500 hover:bg-orange-50 hover:shadow-xl transition-all duration-200 group"
+          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-white border border-orange-200 shadow-lg rounded-full pl-3.5 pr-4 py-2.5 text-sm font-medium text-orange-500 hover:bg-orange-50 hover:shadow-xl transition-all duration-200 group"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-60" />
