@@ -480,7 +480,7 @@ export function SortableField({ field, allFields, onUpdate, onDelete }: Sortable
                       <div className="grid grid-cols-1 gap-2">
                         {/* Trigger field */}
                         <select
-                          className="w-full border border-gray-200 rounded-md px-2 py-1.5 text-xs bg-white"
+                          className="w-full border border-gray-200 bg-gray-50 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-300 transition-colors"
                           value={field.condition?.fieldId ?? ''}
                           onChange={(e) => onUpdate(field.id, { condition: { ...field.condition!, fieldId: e.target.value, value: '' } })}
                         >
@@ -490,7 +490,7 @@ export function SortableField({ field, allFields, onUpdate, onDelete }: Sortable
                         </select>
                         {/* Operator */}
                         <select
-                          className="w-full border border-gray-200 rounded-md px-2 py-1.5 text-xs bg-white"
+                          className="w-full border border-gray-200 bg-gray-50 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-300 transition-colors"
                           value={operator}
                           onChange={(e) => onUpdate(field.id, { condition: { ...field.condition!, operator: e.target.value as ConditionOperator, value: '' } })}
                         >
@@ -502,7 +502,7 @@ export function SortableField({ field, allFields, onUpdate, onDelete }: Sortable
                         {needsValue && (
                           choiceOptions.length > 0 ? (
                             <select
-                              className="w-full border border-gray-200 rounded-md px-2 py-1.5 text-xs bg-white"
+                              className="w-full border border-gray-200 bg-gray-50 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-300 transition-colors"
                               value={field.condition?.value ?? ''}
                               onChange={(e) => onUpdate(field.id, { condition: { ...field.condition!, value: e.target.value } })}
                             >

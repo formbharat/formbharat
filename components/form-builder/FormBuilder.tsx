@@ -52,10 +52,10 @@ function renderPreviewField(field: FormField) {
         </div>
       )
     case 'textarea':
-      return <textarea disabled placeholder={field.placeholder || ''} rows={3} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm resize-none bg-gray-50" />
+      return <textarea disabled placeholder={field.placeholder || ''} rows={3} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm resize-none placeholder:text-gray-400" />
     case 'dropdown':
       return (
-        <select disabled className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm bg-gray-50 text-gray-400">
+        <select disabled className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-400">
           <option>Select an option</option>
           {field.options?.map((o, i) => <option key={i}>{o}</option>)}
         </select>
@@ -81,9 +81,9 @@ function renderPreviewField(field: FormField) {
         </div>
       )
     case 'file':
-      return <input type="file" disabled className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm bg-gray-50" />
+      return <input type="file" disabled className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm" />
     default:
-      return <input type={field.type === 'email' ? 'email' : field.type === 'phone' ? 'tel' : 'text'} disabled placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm bg-gray-50" />
+      return <input type={field.type === 'email' ? 'email' : field.type === 'phone' ? 'tel' : 'text'} disabled placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm placeholder:text-gray-400" />
   }
 }
 
@@ -167,10 +167,10 @@ export function FormBuilder({
             {/* Left Section - Logo & Navigation */}
             <div className="flex items-center gap-3 md:gap-4">
               <Link href="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">F</span>
                 </div>
-                <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-lg md:text-xl font-bold text-orange-500">
                   FormBharat
                 </span>
               </Link>
@@ -219,7 +219,7 @@ export function FormBuilder({
                 onClick={handleSave}
                 disabled={isSaving}
                 size="sm"
-                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 disabled:opacity-60"
+                className="bg-orange-500 hover:bg-orange-600 disabled:opacity-60"
               >
                 <Save className="mr-0 sm:mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">{isSaving ? 'Saving…' : mode === 'edit' ? 'Update Form' : 'Save Form'}</span>
@@ -287,7 +287,7 @@ export function FormBuilder({
               ))
             )}
             {fields.some(f => !['section','heading','image'].includes(f.type)) && (
-              <button disabled className="w-full py-2.5 rounded-lg bg-gradient-to-r from-orange-400 to-pink-400 text-white text-sm font-semibold opacity-70 cursor-not-allowed">
+              <button disabled className="w-full py-2.5 rounded-lg bg-orange-500 text-white text-sm font-semibold opacity-70 cursor-not-allowed">
                 Submit
               </button>
             )}
@@ -403,7 +403,7 @@ export function FormBuilder({
             </Card>
 
             {/* Quick Tips */}
-            <Card className="p-4 bg-gradient-to-br from-orange-50 to-pink-50 border-orange-200">
+            <Card className="p-4 bg-orange-50 border border-orange-100">
               <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
                 <span>💡</span>
                 Quick Tips
