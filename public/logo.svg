@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <!-- Icon mark -->
+  <rect x="0" y="0" width="120" height="120" rx="26" fill="#f97316"/>
+  <!-- F - vertical bar -->
+  <rect x="26" y="24" width="16" height="72" rx="4" fill="white"/>
+  <!-- F - top bar -->
+  <rect x="26" y="24" width="70" height="16" rx="4" fill="white"/>
+  <!-- F - middle bar -->
+  <rect x="26" y="54" width="52" height="14" rx="4" fill="white"/>
+
+  <!-- "Form" text -->
+  <text
+    x="144"
+    y="80"
+    font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="60"
+    font-weight="700"
+    letter-spacing="-1"
+    fill="#1f2937"
+  >Form</text>
+
+  <!-- "Bharat" text -->
+  <text
+    x="333"
+    y="80"
+    font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="60"
+    font-weight="700"
+    letter-spacing="-1"
+    fill="#f97316"
+  >Bharat</text>
+</svg>

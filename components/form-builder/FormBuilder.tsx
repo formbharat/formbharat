@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Save, Eye, Plus, FileText, ChevronLeft, LayoutGrid, Home, HelpCircle, BookTemplate, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { BuilderTour } from '@/components/BuilderTour'
+import { Logo } from '@/components/Logo'
 
 interface FormBuilderProps {
   initialTitle?: string
@@ -180,14 +181,7 @@ export function FormBuilder({
           <div className="flex justify-between items-center">
             {/* Left Section - Logo & Navigation */}
             <div className="flex items-center gap-3 md:gap-4">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">F</span>
-                </div>
-                <span className="text-lg md:text-xl font-bold text-orange-500">
-                  FormBharat
-                </span>
-              </Link>
+              <Logo href="/" size="md" />
               
               <div className="hidden md:flex items-center gap-2">
                 <div className="h-6 w-px bg-gray-300" />

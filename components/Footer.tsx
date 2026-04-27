@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Logo } from '@/components/Logo'
 
 export default function Footer() {
   return (
@@ -6,11 +7,8 @@ export default function Footer() {
       <div className="container mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 md:gap-8 mb-8">
           <div className="sm:col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-3 md:mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">F</span>
-              </div>
-              <span className="text-white font-bold text-lg">FormBharat</span>
+            <div className="mb-3 md:mb-4">
+              <Logo href="/" size="md" dark />
             </div>
             <p className="text-sm">
               The form builder made for Indian businesses. Simple, powerful, and free.

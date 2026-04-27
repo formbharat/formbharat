@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Menu, X, LogOut, ChevronDown, ArrowRight, Target, BarChart2, Layers, Building2, MessageCircle, TrendingUp } from 'lucide-react'
+import { Logo } from '@/components/Logo'
 
 const resourcePillars = [
   {
@@ -96,14 +97,7 @@ export default function Header() {
         <div className="flex justify-between items-center">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">F</span>
-            </div>
-            <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-              FormBharat
-            </span>
-          </Link>
+          <Logo href="/" size="md" />
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
@@ -201,7 +195,7 @@ export default function Header() {
                   <Button variant="outline" size="sm">Login</Button>
                 </Link>
                 <Link href="/builder">
-                  <Button size="sm" className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 shadow-sm">
+                  <Button size="sm" className="bg-orange-500 hover:bg-orange-600 shadow-sm">
                     Start Free →
                   </Button>
                 </Link>
@@ -295,7 +289,7 @@ export default function Header() {
                     <Button variant="outline" className="w-full">Login</Button>
                   </Link>
                   <Link href="/builder" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600">
+                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
                       Start Free →
                     </Button>
                   </Link>

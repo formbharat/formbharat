@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#f97316"/>
+
+  <!-- Geometric "F" made of pure rectangles — renders identically everywhere -->
+  <!-- Vertical bar -->
+  <rect x="108" y="108" width="68" height="296" rx="14" fill="white"/>
+  <!-- Top horizontal bar -->
+  <rect x="108" y="108" width="296" height="68" rx="14" fill="white"/>
+  <!-- Middle horizontal bar -->
+  <rect x="108" y="230" width="216" height="60" rx="14" fill="white"/>
+
+  <!-- Small saffron accent dot (India nod) -->
+  <circle cx="404" cy="108" r="34" fill="#fff7ed" opacity="0.25"/>
+</svg>
