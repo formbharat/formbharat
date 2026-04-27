@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
   Sparkles, CheckCircle2, ArrowRight, ChevronDown,
-  MessageSquare, IndianRupee, ShieldCheck, Zap, BarChart3,
-  Share2, Globe, GitBranch, Star
+  MessageSquare, IndianRupee, ShieldCheck, Zap, Share2, Star
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -15,36 +14,67 @@ import { GuestAIGenerator } from '@/components/GuestAIGenerator'
 import AnimatedSection from '@/components/AnimatedSection'
 
 // ─── AI typing demo ───────────────────────────────────────────────────────────
-const DEMO_PROMPT = 'Customer feedback form for my restaurant...'
-const DEMO_FIELDS = [
-  { label: 'Full Name', hint: 'Short text' },
-  { label: 'Email Address', hint: 'Email' },
-  { label: 'Overall Rating', hint: 'Rating 1–5' },
-  { label: 'Comments', hint: 'Long text' },
+const DEMO_SCENARIOS = [
+  {
+    prompt: 'Customer feedback form for my restaurant...',
+    title: 'Restaurant Feedback',
+    fields: [
+      { label: 'Full Name', hint: 'Short text' },
+      { label: 'Overall Rating', hint: 'Rating 1–5 ★' },
+      { label: 'Food Quality', hint: 'Rating 1–5 ★' },
+      { label: 'Comments', hint: 'Long text' },
+    ],
+  },
+  {
+    prompt: 'Job application form for a software engineer...',
+    title: 'Job Application',
+    fields: [
+      { label: 'Full Name', hint: 'Short text' },
+      { label: 'Email Address', hint: 'Email' },
+      { label: 'Years of Experience', hint: 'Number' },
+      { label: 'Resume Upload', hint: 'File upload' },
+    ],
+  },
+  {
+    prompt: 'Event registration for a weekend workshop...',
+    title: 'Workshop Registration',
+    fields: [
+      { label: 'Participant Name', hint: 'Short text' },
+      { label: 'Phone Number', hint: 'Phone (India)' },
+      { label: 'T-Shirt Size', hint: 'Dropdown' },
+      { label: 'Payment', hint: 'UPI / Card' },
+    ],
+  },
 ]
 
 function useFormDemo() {
+  const [scenario, setScenario] = useState(0)
   const [phase, setPhase] = useState<'typing' | 'generating' | 'fields' | 'pause'>('typing')
   const [chars, setChars] = useState(0)
   const [visible, setVisible] = useState(0)
 
+  const current = DEMO_SCENARIOS[scenario]
+
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>
     if (phase === 'typing') {
-      if (chars < DEMO_PROMPT.length) t = setTimeout(() => setChars(c => c + 1), 52)
-      else t = setTimeout(() => setPhase('generating'), 750)
+      if (chars < current.prompt.length) t = setTimeout(() => setChars(c => c + 1), 48)
+      else t = setTimeout(() => setPhase('generating'), 700)
     } else if (phase === 'generating') {
-      t = setTimeout(() => { setPhase('fields'); setVisible(0) }, 1800)
+      t = setTimeout(() => { setPhase('fields'); setVisible(0) }, 1600)
     } else if (phase === 'fields') {
-      if (visible < DEMO_FIELDS.length) t = setTimeout(() => setVisible(v => v + 1), 380)
+      if (visible < current.fields.length) t = setTimeout(() => setVisible(v => v + 1), 350)
       else t = setTimeout(() => setPhase('pause'), 400)
     } else {
-      t = setTimeout(() => { setPhase('typing'); setChars(0); setVisible(0) }, 3800)
+      t = setTimeout(() => {
+        setScenario(s => (s + 1) % DEMO_SCENARIOS.length)
+        setPhase('typing'); setChars(0); setVisible(0)
+      }, 3200)
     }
     return () => clearTimeout(t)
-  }, [phase, chars, visible])
+  }, [phase, chars, visible, current])
 
-  return { phase, text: DEMO_PROMPT.slice(0, chars), visible }
+  return { phase, text: current.prompt.slice(0, chars), visible, title: current.title, fields: current.fields }
 }
 
 // ─── FAQ item ─────────────────────────────────────────────────────────────────
@@ -106,7 +136,7 @@ export default function Home() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Header />
 
-      {/* Hero */}
+      {/* ── HERO ── */}
       <section className="bg-orange-50 px-4 pt-16 md:pt-24 pb-20 md:pb-28">
         <div className="container mx-auto">
 
@@ -202,25 +232,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TICKER ── */}
-      <div className="border-y border-gray-100 py-3.5 bg-white overflow-hidden">
-        <div className="flex gap-8 animate-scroll-left whitespace-nowrap">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-8 flex-shrink-0">
-              {[
-                'Customer Feedback', 'Event Registration', 'Job Applications', 'Order Forms',
-                'Lead Generation', 'Student Enrollment', 'Support Tickets', 'Market Research',
-                'Booking Forms', 'NPS Surveys', 'Membership Sign-ups', 'Course Registration',
-              ].map((label) => (
-                <span key={label} className="flex items-center gap-2 text-xs text-gray-400 font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-300 flex-shrink-0" />
-                  {label}
-                </span>
-              ))}
-            </div>
-          ))}
+      {/* ── PAIN ── */}
+      <section className="py-16 px-4 border-b border-gray-100">
+        <div className="container mx-auto max-w-4xl">
+          <AnimatedSection className="text-center mb-10">
+            <p className="text-sm text-gray-400 font-medium">The problem with every form tool you&apos;ve tried</p>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              {
+                tool: 'Typeform', price: '$25/month',
+                problem: 'Starts free, then gates responses behind a paywall. No UPI, no WhatsApp, no Indian context.',
+                bg: 'bg-red-50', border: 'border-red-100', tag: 'text-red-400',
+              },
+              {
+                tool: 'Google Forms', price: 'Free',
+                problem: 'No conditional logic, no payments, no branding. Fine for a school survey, not for a business.',
+                bg: 'bg-yellow-50', border: 'border-yellow-100', tag: 'text-yellow-500',
+              },
+              {
+                tool: 'JotForm', price: '$34/month',
+                problem: 'Powerful but complex and expensive. Not designed for how India operates.',
+                bg: 'bg-slate-50', border: 'border-slate-100', tag: 'text-slate-400',
+              },
+            ].map((item, i) => (
+              <AnimatedSection key={i} delay={i * 100}>
+                <div className={`rounded-2xl border p-5 ${item.bg} ${item.border}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-gray-700">{item.tool}</span>
+                    <span className={`text-xs font-medium ${item.tag}`}>{item.price}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-relaxed mb-4">{item.problem}</p>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                    <span className="w-3 h-3 rounded-full bg-red-200 flex items-center justify-center text-red-400 font-bold text-[9px]">✕</span>
+                    Not built for India
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* ── INDIA-FIRST ── */}
+      <section className="py-20 md:py-28 px-4 bg-orange-50">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">So we built FormBharat</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              The only form builder that<br className="hidden md:block" /> truly understands India
+            </h2>
+            <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm md:text-base">
+              Not adapted from a Western product. Built from scratch for how India actually works.
+            </p>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                icon: MessageSquare, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-100',
+                badge: 'WhatsApp native', title: 'WhatsApp Sharing',
+                desc: 'Share forms directly to WhatsApp with one click. India has 500M+ WhatsApp users — meet them where they are.',
+                detail: 'Every public form gets a WhatsApp share button built in.',
+              },
+              {
+                icon: IndianRupee, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100',
+                badge: 'UPI + Cards', title: 'Razorpay Payments',
+                desc: 'Add a payment field and collect fees via UPI, cards, and net banking — as part of the form submission flow.',
+                detail: 'Perfect for order forms, event fees, and service bookings.',
+              },
+              {
+                icon: ShieldCheck, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100',
+                badge: '10K free/month', title: 'Phone OTP Verification',
+                desc: "Verify respondents' Indian mobile numbers with Firebase OTP before submission. Stop fake entries cold.",
+                detail: 'Powered by Firebase Authentication.',
+              },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <AnimatedSection key={i} delay={i * 120}>
+                  <div className={`bg-white rounded-2xl p-6 border ${item.border} hover:shadow-md transition-all duration-300 h-full`}>
+                    <div className="flex items-start justify-between mb-5">
+                      <div className={`w-10 h-10 ${item.bg} rounded-xl flex items-center justify-center`}>
+                        <Icon className={`h-5 w-5 ${item.color}`} />
+                      </div>
+                      <span className={`text-xs font-semibold ${item.color} ${item.bg} px-2.5 py-1 rounded-full border ${item.border}`}>
+                        {item.badge}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed mb-3">{item.desc}</p>
+                    <p className="text-xs text-gray-400">{item.detail}</p>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ── HOW IT WORKS ── */}
       <section className="py-20 md:py-28 px-4 bg-gray-50">
@@ -289,13 +397,13 @@ export default function Home() {
               <div className="bg-white rounded-2xl border border-gray-100 p-5 min-h-[220px] shadow-sm">
                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
                   <div className="w-2 h-2 rounded-full bg-orange-400" />
-                  <span className="text-xs font-medium text-gray-600">Customer Feedback</span>
+                  <span className="text-xs font-medium text-gray-600">{demo.title}</span>
                   {(demo.phase === 'fields' || demo.phase === 'pause') && (
                     <span className="ml-auto text-xs text-green-600 font-medium">✓ Ready</span>
                   )}
                 </div>
                 <div className="space-y-2.5">
-                  {DEMO_FIELDS.slice(0, demo.visible).map((f, i) => (
+                  {demo.fields.slice(0, demo.visible).map((f, i) => (
                     <div key={i} className="animate-fade-in-up">
                       <p className="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">{f.label}</p>
                       <div className="h-7 rounded-lg bg-gray-50 border border-gray-100 flex items-center px-3">
@@ -330,94 +438,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── INDIA-FIRST ── */}
-      <section className="py-20 md:py-28 px-4 bg-orange-50">
-        <div className="container mx-auto max-w-5xl">
-          <AnimatedSection className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Built for India</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              The only form builder that<br className="hidden md:block" /> truly understands India
-            </h2>
-            <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm md:text-base">
-              Not adapted from a Western product. Built from scratch for how India actually works.
-            </p>
-          </AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: MessageSquare, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-100',
-                badge: 'WhatsApp native', title: 'WhatsApp Sharing',
-                desc: 'Share forms directly to WhatsApp with one click. India has 500M+ WhatsApp users — meet them where they are.',
-                detail: 'Every public form gets a WhatsApp share button built in.',
-              },
-              {
-                icon: IndianRupee, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100',
-                badge: 'UPI + Cards', title: 'Razorpay Payments',
-                desc: 'Add a payment field and collect fees via UPI, cards, and net banking — as part of the form submission flow.',
-                detail: 'Perfect for order forms, event fees, and service bookings.',
-              },
-              {
-                icon: ShieldCheck, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100',
-                badge: '10K free/month', title: 'Phone OTP Verification',
-                desc: 'Verify respondents\' Indian mobile numbers with Firebase OTP before submission. Stop fake entries cold.',
-                detail: 'Powered by Firebase Authentication.',
-              },
-            ].map((item, i) => {
-              const Icon = item.icon
-              return (
-                <AnimatedSection key={i} delay={i * 120}>
-                  <div className={`bg-white rounded-2xl p-6 border ${item.border} hover:shadow-md transition-all duration-300 h-full`}>
-                    <div className="flex items-start justify-between mb-5">
-                      <div className={`w-10 h-10 ${item.bg} rounded-xl flex items-center justify-center`}>
-                        <Icon className={`h-5 w-5 ${item.color}`} />
-                      </div>
-                      <span className={`text-xs font-semibold ${item.color} ${item.bg} px-2.5 py-1 rounded-full border ${item.border}`}>
-                        {item.badge}
-                      </span>
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-3">{item.desc}</p>
-                    <p className="text-xs text-gray-400">{item.detail}</p>
-                  </div>
-                </AnimatedSection>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURES ── */}
-      <section className="py-20 md:py-28 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <AnimatedSection className="text-center mb-14">
-            <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Everything you need</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Powerful. Simple. Fast.</h2>
-          </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { icon: Zap, bg: 'bg-orange-50', color: 'text-orange-500', title: 'Drag & Drop Builder', desc: '12+ field types. Conditional logic. Multi-step forms. No coding required.' },
-              { icon: BarChart3, bg: 'bg-blue-50', color: 'text-blue-500', title: 'Analytics & Insights', desc: 'Real-time dashboard. Completion rates. CSV export. Field-level data.' },
-              { icon: GitBranch, bg: 'bg-purple-50', color: 'text-purple-500', title: 'Conditional Logic', desc: 'Show or hide fields based on answers. Build intelligent, dynamic forms.' },
-              { icon: Globe, bg: 'bg-green-50', color: 'text-green-500', title: 'Embed Anywhere', desc: 'Drop your form into any website with one line of code. QR code included.' },
-              { icon: Share2, bg: 'bg-pink-50', color: 'text-pink-500', title: 'Instant Sharing', desc: 'Public link, WhatsApp share, QR code, or iframe embed — all built in.' },
-              { icon: Sparkles, bg: 'bg-amber-50', color: 'text-amber-500', title: 'AI-Powered', desc: 'Generate complete forms from a sentence. Smart suggestions as you build.' },
-            ].map((feat, i) => {
-              const Icon = feat.icon
-              return (
-                <AnimatedSection key={i} delay={i * 70}>
-                  <div className="p-5 rounded-2xl border border-gray-100 hover:border-orange-200 hover:shadow-sm transition-all duration-300 h-full">
-                    <div className={`w-9 h-9 ${feat.bg} rounded-xl flex items-center justify-center mb-4`}>
-                      <Icon className={`h-4 w-4 ${feat.color}`} />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-1.5 text-sm">{feat.title}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed">{feat.desc}</p>
-                  </div>
-                </AnimatedSection>
-              )
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* ── PRICING ── */}
       <section className="py-20 md:py-28 px-4 bg-gray-50">
@@ -470,7 +490,7 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-20 md:py-28 px-4">
+      <section className="py-20 md:py-28 px-4 bg-white">
         <div className="container mx-auto max-w-5xl">
           <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-orange-500 mb-3">Early users</p>
